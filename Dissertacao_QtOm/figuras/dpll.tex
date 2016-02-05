@@ -1,0 +1,20 @@
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=5.5cm,
+                    semithick]
+   \tikzstyle{every state}=[rectangle,rounded corners=10pt]
+
+  \node[initial,state, initial text={}]	(A)      {\textit{Atribui literal}};
+  \node[state]         		(B) [right of=A] {\textit{Propaga atribui\c c\~ao}};
+  \node[state]         		(C) [right of=B] {\textit{Analisa conflito}};
+  \node[state, accepting]	(D) [below=2cm of A] {\textit{SAT}};
+  \node[state, accepting]	(E) [below=2cm of C] {\textit{UNSAT}};
+
+    \path (A) edge 		node {\textit{Atribui\c c\~ao}} (B)
+	      edge [below]	node {\textit{parcial}} (B)
+	      edge [left, pos=0.40]	node {\textit{Atribui\c c\~ao}} (D)
+	      edge [left, pos=0.60]	node {\textit{total}} (D)
+          (B) edge [bend left]	node {\textit{Nenhum Conflito}} (A)
+	      edge 		node {\textit{Conflito}} (C)
+	  (C) edge [bend left]	node {\textit{Retrocede}} (B)
+	      edge [pos=0.40]	node {\textit{Imposs\'ivel}} (E)
+	      edge [pos=0.60]	node {\textit{retroceder}} (E);
+\end{tikzpicture}
