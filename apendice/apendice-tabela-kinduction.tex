@@ -1,0 +1,125 @@
+\chapter{Tabela Completa dos Resultados do K-\textit{Induction}}
+\label{appendix:Tabela-kinduction-full}
+
+\begin{table*}[b!]
+\renewcommand\arraystretch{1.18}
+\setlength{\tabcolsep}{1.5pt}
+\begin{center} {\small
+\begin{tabular}{|c|l|r|r|r||r|l|l|r|r|r|c|}
+\hline
+	&\textbf{Caso de teste}		&\textbf{L}	&\textbf{Tempo (s)}	&\textbf{Resultado}	&	&\textbf{Caso de teste}		&\textbf{L}	&\textbf{Tempo (s)}	&\textbf{Resultado}	\\
+\hline
+1	&array			&21	&0,18		&S		&23	&invert\_string		&33	&0,93		&S		\\
+\hline
+2	&array\_bug		&21	&0,21		&S		&24	&invert\_string\_bug	&39	&4,01		&S		\\
+\hline
+3	&bist\_cell		&507	&0,41		&S		&25	&kinductor\_01		&29	&0,21		&S		\\
+\hline
+4	&bubble\_sort		&1170	&0,41		&S		&26	&kundu			&512	&1,23		&S		\\
+\hline
+5	&bubble\_sort\_bug	&9	&0,46		&\Cross		&27	&kundu\_bug		&631	&2,36		&S		\\
+\hline
+6	&byte\_add\_bug		&104	&0,79		&S		&28	&linear\_search		&17	&0,27		&S		\\
+\hline
+7	&check\_if		&18	&0,21		&S		&29	&linear\_search\_bug	&17	&2,99		&S		\\
+\hline
+8	&check\_if\_bug		&18	&0,22		&S		&30	&list			&42	&0,27		&\Cross		\\
+\hline
+9	&count\_down		&18	&0,20		&S		&31	&list\_bug		&78	&0,22		&\Cross		\\
+\hline
+10	&count\_down\_02	&18	&0,20		&S		&32	&ludcmp			&145	&0,57		&S		\\
+\hline
+11	&count\_up\_down	&16	&0,19		&S		&33	&ludcmp\_bad		&145	&0,39		&S		\\
+\hline
+12	&count\_up\_down	&14	&0,18		&S		&34	&matrix			&43	&0,20		&S		\\
+\hline
+13	&digital-controller	&37	&0,54		&S		&35	&matrix\_bug		&25	&0,44		&S		\\
+\hline
+14	&eureka\_01		&51	&0,33		&S		&36	&mem\_slave\_tlm	&1372	&1,91		&S		\\
+\hline
+15	&eureka\_01\_bug	&54	&12,87		&S		&37	&nec11			&24	&0,20		&S		\\
+\hline
+16	&eureka\_05		&36	&1,29		&S		&38	&nec11\_bug		&24	&0,18		&S		\\
+\hline
+17	&for\_bounded\_loop1	&20	&0,24		&S		&39	&nec20\_bug		&32	&1,52		&S		\\
+\hline
+18	&for\_infinite\_loop\_1	&14	&0,19		&S		&40	&nec24			&77	&0,10		&S		\\
+\hline
+19	&for\_infinite\_loop\_2	&14	&0,20		&S		&41	&nec40			&19	&0,20		&S		\\
+\hline
+20	&gcd-with-time		&34	&0,23		&S		&42	&nec40\_bug		&19	&0,19		&S		\\
+\hline
+21	&insertion\_sort	&20	&0,27		&S		&43	&pc\_sfifo\_1		&367	&4,88		&S		\\
+\hline
+22	&insertion\_sort\_bug	&20	&3,61		&S		&44	&pc\_sfifo\_2\_BUG	&473	&0,31		&S		\\
+\hline
+\end{tabular} }
+\end{center}
+\label{table:results-of-the-ESBMC-k-induction}
+\end{table*}
+
+\begin{table*}[t!]
+\renewcommand\arraystretch{1.18}
+\setlength{\tabcolsep}{1.5pt}
+\begin{center} {\small
+\begin{tabular}{|c|l|r|r|r||r|l|l|r|r|r|l|}
+\hline
+	&\textbf{Caso de teste}		&\textbf{L}	&\textbf{Tempo (s)}	&\textbf{Resultado}	&	&\textbf{Caso de teste}		&\textbf{L}	&\textbf{Tempo (s)}	&\textbf{Resultado}	\\
+\hline
+45	&s3			&1638	&1,25		&\Cross		&69	&terminator\_06		&25	&0,21		&S		\\
+\hline
+46	&string			&53	&1,43		&S		&70	&terminator\_06\_bug	&25	&0,19		&S		\\
+\hline
+47	&string\_bug		&53	&0,49		&S		&71	&token\_ring01		&500	&1,70		&S		\\
+\hline
+48	&sum01			&13	&0,20		&S		&72	&token\_ring01\_bug	&472	&0,91		&S		\\
+\hline
+49	&sum01\_bug		&12	&5,58		&S		&73	&toy			&727	&0,42		&S		\\
+\hline
+50	&sum01\_bug02		&12	&2,11		&S		&74	&transmitter\_bug	&447	&2,63		&S		\\
+\hline
+51	&sum02			&9	&0,21		&S		&75	&trex01			&31	&0,30		&S		\\
+\hline
+52	&sum03			&22	&0,72		&S		&76	&trex01\_bug		&31	&0,20		&S		\\
+\hline
+53	&sum03\_bug		&22	&0,20		&S		&77	&trex02			&21	&0,22		&S		\\
+\hline
+54	&sum04			&13	&0,21		&S		&78	&trex02\_bug		&21	&0,19		&S		\\
+\hline
+55	&sum04\_bug		&13	&0,21		&S		&79	&trex03			&22	&0,23		&S		\\
+\hline
+56	&sum05\_bug		&12	&0,21		&S		&80	&trex03\_bug		&22	&0,20		&S		\\
+\hline
+57	&sum\_array		&26	&0,25		&\Cross		&81	&trex04			&33	&0,23		&S		\\
+\hline
+58	&sum\_array\_bug	&25	&0,27		&\Cross		&82	&verisec\_NetBSDlibc\_1	&32	&0,21		&S		\\
+\hline
+59	&terminator\_01		&14	&0,19		&S		&83	&verisec\_NetBSDlibc\_2	&32	&0,19		&S		\\
+\hline
+60	&terminator\_01\_bug	&18	&0,19		&S		&84	&verisec\_OpenSER\_bad	&57	&0,34		&S		\\
+\hline
+61	&terminator\_02		&27	&0,20		&S		&85	&verisec\_OpenSER\_ok	&59	&1,83		&S		\\
+\hline
+62	&terminator\_02\_bug	&27	&0,20		&S		&86	&verisec\_sendmail\_bad	&25	&3,11		&S		\\
+\hline
+63	&terminator\_03		&19	&0,19		&S		&87	&verisec\_sendmail\_ok	&23	&0,30		&S		\\
+\hline
+64	&terminator\_03\_bug	&19	&0,21		&S		&88	&vogal			&44	&0,31		&\Cross		\\
+\hline
+65	&terminator\_04		&22	&0,24		&S		&89	&vogal\_bug		&44	&0,27		&\Cross		\\
+\hline
+66	&terminator\_04\_bug	&22	&0,18		&S		&90	&while\_infin\_loop\_1	&13	&0,20		&S		\\
+\hline
+67	&terminator\_05		&23	&0,20		&S		&91	&while\_infin\_loop\_2	&13	&0,18		&S		\\
+\hline
+68	&terminator\_05\_bug	&23	&0,20		&S		&92	&while\_infin\_loop\_3	&26	&0,19		&S		\\
+\hline
+	&			&	&		&		&93	&while\_infin\_loop\_4	&26	&0,20		&S		\\
+\hline
+\hline
+	\multicolumn{5}{|}{}						&	& Total			&11305	&77,31		&		\\
+\hline
+\end{tabular} }
+\end{center}
+\label{table:results-of-the-ESBMC-k-induction}
+\end{table*}

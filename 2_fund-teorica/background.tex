@@ -1,0 +1,81 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Fundamentação Teórica}
+\label{chapter:background}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Neste capítulo, a arquitetura de ESBMC++ é descrita, assim como, é realizado uma descrição de algumas características estruturais do framework multiplataforma Qt. A maior concentração deste trabalho consiste na verificação de programas em C$++$ baseados no framework Qt, usando a ferramenta ESBMC$++$, a qual possui um front-end baseado em CBMC com o intuito de produzir VCs para um programa Qt/C$++$. No entanto, em vez de passar VCs a um solucionador SAT, ESBMC$++$ os codifica através de diferentes teorias SMT e em seguida, passa os resultados associados a um solucinador SMT.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ESBMC++}
+\label{sec:arch}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ESBMC$++$, cujo possui a arquitetura mostrado na figura~\ref{figure:Fig1}, é um context-bounded model checker baseado em solucionadores SMT usado em programas ANSI-C/C$++$~\cite{ECBS13,TSE12,ICSE11}. ESBMC$++$ verifica programas simples e multi-threaded e analisa propriedades relacionadas à aritmética de under- e overflow, divisão por zero, indíces fora do limite, segurança de ponteiros, deadlocks e corrida de dados. Em ESBMC$++$, o processo de verificação se encontra totalmente automatizado, isto é, todos os processos realizados são representados nas caixas cinzas de acordo com a figura~\ref{figure:Fig1}, ou seja, não existe nenhuma possibilidade do usuário pré-processar programas em qualquer fase descrita. 	 
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=4in]{figuras/Fig1.pdf}
+  \caption{Visão geral da arquitetura de ESBMC$++$.}
+  \label{figure:Fig1}
+\end{figure}
+
+No momento da verificação, primeiramente é realizado o parser do código fonte a ser analisado. Na verdade, o parser utilizado em ESBMC$++$ é fortemente baseado no compilador GNU C$++$, uma vez que a abordagem permite que ESBMC$++$ encontre a maioria dos erros de sintaxe já relatados por GCC. Programas ANSI-C/C$++$/Qt são convertidos em uma árvore de representação intermédiaria (IRep), e boa parte dessa representação criada é usada como base para os passos restantes da verificação. Vale ressaltar que o modelo operacional(MO) é o ponto chave neste processo de conversão, o que será explicado no Cáp.~\ref{sec:smt-bmc}.
+
+Na etapa seguinte, denominada type-check, verificações adicionais são realizadas, na árvore IRep, que incluem atribuições, type-cast, inicialização de ponteiros e a análise das chamadas de função, assim como, a criação de templates e instanciações~\cite{ECBS13}. Em seguida, a árvore IRep é convertida em expressões goto que simplificam a representação das instruções ( por exemplo, a substituição de \textit{while} por \textit{if} e instruções goto) e são executadas de forma simbólica por \textit{GOTO-symex}). Como resultado, uma Single Static Assignment(SSA) é criada. Baseado nisso, ESBMC++ cria duas formulas chamadas \textit{restrições} (ou seja, premissas e atribuições de variáveis) e \textit{propriedades} (ou seja, condições de segurança e premissas definidas pelo o usuário) consideradas funções recursivas. Essas fórmulas acumulam predicados de controle de fluxo de cada ponto do programa analisado e os usa para armazernar restrições (fórmula ${\cal C}$) e propriedades (fórmula ${\cal P}$), de modo que reflita adequadamente a semântica do programa. Posteriormente, essas duas fórmulas de lógica de primeira ordem são verificadas por um solucinador SMT.
+
+Por fim, se uma violação em alguma propriedade for encontrada, um contraexemplo é gerado por ESBMC++, o qual, atribui valores a variáveis de programa com o intuito de reproduzir o erro encontrado. De fato, contraexemplos possuem grande importância para o diagnóstico e a análise da execução do programa, dado que as violações encontradas pode ser sistematicamente rastreadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Satisfiability Modulo Theories (SMT)}
+%\section{Teorias do Módulo da Satisfabilidade}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+SMT determina a satisfatibilidade das fórmulas de primeira ordem, usando uma combinação de suas teorias a fim de generalizar a satisfabilidade proposicional, dando suporte a funções não interpretadas, aritmética linear e não linear, bit-vectors, tuplas, vetores e outras teorias de primeira ordem de decisão. Dado uma teoria ${\cal T}$ e uma fórmula livre de quantificadores $\psi$, a respectiva fórmula, é satisfatível ${\cal T}$ se somente se existir uma estrutura que satisfaça tanto a fórmula quanto as sentenças de ${\cal T}$, ou seja, se ${\cal T}\cup \{\psi\}$ é satisfatível~\cite{Bradley07}. Dado um conjunto $\Gamma\cup \{\psi\}$ das fórmulas sobre ${\cal T}$, $\psi$ é uma consequência ${\cal T}$ de $\Gamma$ ($\Gamma\models_{\cal T}\psi$) se e somente se todo os modelos de ${\cal T}\cup\Gamma$ é também um modelo de $\psi$. Desta forma, ao verificar $\Gamma\models_{\cal T}\psi$ pode se reduzi-la para verificação de um satisfatível $\cal T$ de $\Gamma\cup\{\neg\psi\}$.
+
+As teorias dos vetores de solucinadores SMT são normalmente baseadas em axiomas de McCarthy~\cite{McCarthy62}. A função \emph{select(a,i)} indica o valor de $a$ no índice $i$ e a função \emph{store(a,i,v)} indica um vetor que é exatament o mesmo que $a$ ao menos que o valor do índice $i$ seja $v$. Formalmente,\emph{select} e \emph{store} pode então ser caracterizados por axiomas~\cite{Z308,Boolector09,CVC07}
+
+\[
+\begin{array}{l}
+ i=j  \Rightarrow select\left(store\left(a,i,v\right),j\right)=v \\
+\end{array}
+\]
+
+{\noindent e}
+
+\[
+\begin{array}{l}
+ i \neq j \Rightarrow select\left(store\left(a,i,v\right)=select\left(a,j\right).
+\end{array}
+\]
+
+\noindent
+Tuplas são utilizadas para modelar union em ANSI-C, struct e fornecer as operações de store e select, as quais, são semelhantes as usadas em vetores. No entanto, elas trabalham com elementos de tupla, isto é, cada campo de uma tupla é representado por uma constante inteira. Desta forma, a expressão $\mathit{select}(t, f)$ indica o campo $f$ de uma tupla $t$, enquanto a expressão $\mathit{store}(t, f, v)$ indica uma tupla $t$ que, no campo $f$, tem o valor $v$. A fim de analisar a satisfabilidade de uma determinada fórmula, solucianadores SMT lidam com termos baseados em suas teorias usando um procedimento de decisão~\cite{MouraB09}.
+
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+\section{O framework multiplataforma Qt}
+%=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Diversos módulos de softwares, conhecidos como frameworks, tem sido utilizados para acelerar os processos de desenvolvimento de aplicações. Diante desse contexto, o framework multiplataforma Qt~\cite{Qt15} representa um grande exemplo de um conjunto de classes reutilizavéis, onde a engenharia de software presente é capaz de favorecer o desenvolvimento de aplicações gráficas que utilizam C++~\cite{Qt15} e Java~\cite{qtjambi}. São fornecidos programas que são executados em diferentes plataformas tanto de hardware quanto de software com o mínimo de mundaças nas aplicações desenvolvidas com o objetivo de manter o mesmo desempenho. Samsung~\cite{Samsung}, Philips~\cite{Philips} e Panasonic~\cite{Panasonic} são alguma das empresas presentes na lista top 10 da Fortune 500 que utilizam Qt para o desenvolvimento de suas aplicações~\cite{Qt15}.
+
+De acordo com o Cross-Platform Tool Benchmarking 2014~\cite{cross2014}, Qt é o framework multiplataforma que lidera o desenvolvimento de aplicações para dispositivos e interfaces para usuários. Com as suas bibliotecas organizadas em módulos conforme na figura~\ref{figure:Fig4}. O módulo QtCore~\cite{Qt15} é considerado um módulo base de Qt, pois, contém todas as classes não gráficas das classes core e em particular contém um conjunto de bibliotecas denominado de classes Containers que possui como implementação um modelo base para esses tipos de classe com um intuito de uso geral ou como uma alternativa para containers STL. Esses tipos de estruturas são amplamentes conhecinhos e aplicados em aplicações reais com Qt e consistem em um item muito importante nos processos de verificação.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=2.0in]{figuras/Fig4.pdf}
+  \caption{Visão geral da estrutura do framework Qt.}
+  \label{figure:Fig4}
+\end{figure}
+
+Além desses submódulos, QtCore também contém um sistema de eventos denominado Qt Event, onde, Qt representa um evento através de um objeto que herda a classe QEvent(classe base para o sistema Qt Event) na qual contém informações necessárias sobre todas as ações(internas ou externas) relacionadas a uma aplicação. Uma vez instanciado, este objeto é enviado para uma instância da classe QObject, o qual possui como função chamar um método escalonador apropriado para o seu tipo.
+
+Desta forma, o framework Qt fornece uma completa abstração para Graphical User Interface (GUI) usando APIs nativas, a partir das diferentes plataformas operacionais disponivéis no mercado, para consultar as métricas e desenhar os elementos gráficos. Também são oferecidos signals e slots com o objetivo de realizar a comunicação entres os objetos criados~\cite{QtLibs5}. Outra característica importante a ser ressaltada deste framework é a presença de um compilador denominado MetaObject, o qual, é responsável por interpretar os programas criados e gerar um código em C++ com meta informações~\cite{Moc}.
+
+Por fim e de acordo com o apresentado, nota-se que a complexidade e robustez de programas que se utilizam o framework Qt afeta diretamente os processos de verificação relacionados a eles. Em resumo, QtOM possui uma representação de todas as classes acima referidas e suas respectivas interações a fim de suportar também todo o sistema Qt Event.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resumo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Resumo

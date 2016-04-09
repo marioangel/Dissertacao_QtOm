@@ -1,0 +1,23 @@
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+   \tikzstyle{every state}=[rectangle,rounded corners=10pt]
+
+  \node[initial,state] (A)              {$1, ?, 0$};
+  \node[state]         (B) [below of=A] {$i_n, n, sn$};
+  \node[state]         (C) [below left of=B] {$i_{n+1}, n, sn+2$};
+  \node[state]         (D) [below right of=B] {$i_{n+1}, n, sn$};
+  \node[state]         (E) [below of=C] {$n+1, n, sn$};
+  \node[state]         (F) [below of=D] {$n+1, n, 18$};
+  \node[state]         (G) [below left of=E] {$n+1, n, 0$};
+  \node[state]         (H) [below right of=E] {$n+1, n, n\times2$};
+
+   \path (A) edge              node {} (B)
+         (B) edge [pos=0.6]    node {$i < 10$} (C)
+	     edge [left, pos=0.8]      node {$i \geq n$} (D)
+         (C) edge [bend left]  node {$i \leq n$} (B)
+             edge [left]       node {$i>n$} (E)
+         (D) edge              node {$i>n$} (F)
+             edge [bend right, right] node {$n \neq 0$} (B)
+         (E) edge [left, pos=0.3]       node {$n=0$} (G)
+             edge [right,pos=0.3]       node {$n \neq 0$} (H);
+\end{tikzpicture}

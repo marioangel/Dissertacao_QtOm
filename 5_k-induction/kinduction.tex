@@ -1,0 +1,99 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Avaliação experimental}
+\label{sec:dis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Este capítulo é dividido em três partes. Seção~\ref{sec:setup} descreve a toda configuração, os experimentos e todos os parâmetros de avaliação utilizados para a realização das avaliações. Na seção~\ref{sec:benchmark}, a corretude e também o desempenho do método proposto são verificados utilizando programas C++/Qt utilizando uma única thread e que em sua maioria foram retirados da documentação do Qt~\cite{Qt15}. Por fim, é descrito os resultados da verificação para as duas aplicações reais(Locomaps~\cite{locomaps} e GeoMessage~\cite{geomessage}) através do modelo operacional proposto denominado QtOM na seção~\ref{sec:realqt}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Configuração Experimental}
+\label{sec:setup}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Como o intuito de avaliar a eficácia da abordagem proposta a cerca da verificação de programas que utilizam o framework Qt, um conjunto de testes automáticos denomidado {\it esbmc--qt} foi criado. Em resumo, neste conjunto está contido $711$ programas Qt/C++($12903$ linhas de código), ou seja, todos os casos de teste utilizadas na atual avaliação.
+
+Os casos de teste referidos acima estão dividos em 10 principais conjuntos de teste. Denominados QHash, QLinkedList, QList, QMap, QMultiHash, QMultiMap, QQueue, QSet, QStack e QVector com casos de teste para as respectivas classes container que em sua maioria tem acesso aos módulos Qt Core e Qt GUI. Alguns desses casos de teste foram diretamente retirados da documentação sobre o Qt e os restantes foram desenvolvidos especificamente para testar todos os recursos fornecidos pelo framework Qt. Vale ressaltar que cada caso de teste é verificado manualmente antes de ser adicionado ao seu respectivo conjunto de teste. Desta forma, é capaz de se identificar se um determinado caso de teste possui ou não quaisquer erro e está de acordo com a operação a ser realizada. Assim, com base nesta revisão é possível garantir que $353$ dos $711$ casos de teste contêm erro, ou seja, $49.65$\% e $358$ casos de teste não possuem falhas isto é$50.35$\%. Na realidade esse tipo de revisão é essencial para a nossa avaliação experimental uma vez que pode-se comparar os resultados obtidos através da verificação realizada pelas ferramentas utilizadas e avaliar adequadamente se erros reais foram encontrados. 
+
+Todos os experimentos foram realizados em um Intel Core $i7$-$4790$ com $3.60$ GHz de clock e $24$ GB($22$ GB de memória RAM e $2$ GB de mémoria virtual), executanto o sistema operacial denominado livre e chamado de Fedora de $64$ bits se utilizando a ferramenta denominada ESBMC$++$ de versão $1.25.4$ com três tipos de solucionadores instalados denominados, Z3 com versão $4.0$, Boolector com versão $2.0.1$ e Yices 2 com versão $4.1$. Os limites de tempo e memória utilizados para cada caso de teste foram respectivamente definidos em 600 segundos e 22 GB. Em adição, uma avaliação foi realizada utilizando CBMC~$v5.1$, LLBMC~$v2013.1$ e DIVINE~$v3.3.2$ combinados com o modelo operacinal proposto(QtOM) com o objetivo de proporcionar comparações entre ferramentas e em relação a ESBMC$++$. Os períodos de tempo foram indicados usando a função \verb|clock_gettime| a partir da biblioteca \verb|time.h|~\cite{time}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comparação entre solucionadores SMT}
+\label{sec:benchmark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+É conhecido que diferentes solucionadores SMT podem afetar fortemente os resultados obtidos, uma vez que não existe homogeneidade em relação a abordagem de implementação e as lógicas suportadas. Primeiramente foram realizadas verificações usando os três solucionadores SMT mencionadas(Z3, Boolector e Yices). Sendo assim, Yices obteve os piores resultados, apresentando uma taxa de cobertura com $78$\% e um tempo de verificação com $26,27$ minutos. Por outro lado, tanto os solucionadores Z3 e Boolector apresentaram uma taxa de cobertura com $89$\% mas as verificações realizadas com Z3 se mostraram inferiores em relação as verificações feitas com Boolector a cerca do tempo de verificação, onde, respectivamente são apresentados tempos de verificação com $223,6$ minutos e $26,38$ minutos, sendo relatado quatro casos de teste com violação em relação ao tempo limite determinado, isto é, Boolector foi aproximadamente 8,5 vezes mais rápido que Z3 com a mesma precisão. Além disso, Yices apresentou a menor taxa de cobertura e tempo, pois, não possui suporte a tuplas. Desta forma, não conseguiu resolver corretamente as fórmulas SMT originadas do processo de verificação dos diversos casos de teste. Em resumo, de acordo com a figura ~\ref{figure:solver-comparison} Boolector se apresenta como o melhor solucionador para o processo de verificação proposto.
+
+\begin{figure}[htb]
+\centering
+\subfloat[Taxa de cobertura]{
+\includegraphics[width=0.45\textwidth]{figuras/qt-coverage.pdf}
+\label{subfig-1:coverage}
+}
+\quad %espaco separador
+\subfloat[Tempo de verificação]{
+\includegraphics[width=0.45\textwidth]{figuras/qt-time.pdf}
+\label{subfig-2:time}
+}
+\caption{Comparação entre solucionadores SMT.}
+\label{figure:solver-comparison}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Verificação dos resultados para o conjunto de casos de teste desenvolvidos}
+\label{sec:evaluation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Todos os casos de teste presente na suite de teste {\it esbmc-qt} foram verificados de forma automática por ESBMC$++$ com o objetivo de analisar a sua corretude e eficiência. Além da comparação entre solucionadores SMT descrita acima, uma análise a cerca do desempenho entre ferramentas de verificação distintas também foi realizada. Como já mencionado não existe um verificador que análise o framework Qt e nem um modelo operacional semelhante ao proposto neste trabalho(QtOM) utilizando a linguagem C++. No entanto, devido à versatilidade de QtOM também é possível conectá-lo ao processo de verificação de LLBMC~\cite{Florian12} e DIVINE~\cite{BBH13}, cuja base deste processo é a tradução código fonte em um representação intermediária denominada LLVM. Dessa forma, QtOM é usado como um apoio em seus processos de tradução, pois, o bitcode que logo em seguida é produzido contém informações a cerca do código fonte utilizado na verificação e do modelo operacional proposto(QtOM). Por fim, foi feito uma comparação em relação ao desempenho de LLBMC e ESBMC++, que são verificadores baseados em técnicas SMT, e DIVINE, que emprega uma verificação de modelos através estados explícitos. Inicialmente, houve uma iniciativa de se realizar também uma comparação com CBMC~\cite{CBMC14} embora mesmo sendo utilizado o modelo operacional proposto não foi possível de realizar as verificações determinadas, isto já havia sido relatado em trabalhos anteriores por Ramalho et al.~\cite{ECBS13} e Merz et al.~\cite{Florian12}, o que ocasionou em sua remoção durante o processo de avaliação.
+
+As ferramentas utilizadas foram executadas seguindo três roteiros. Um para ESBMC$++$ que identifica a partir de um arquivo seus parâmetros iniciais e realiza sua execução\footnote{esbmc *.cpp -\/-unwind $<$bound$>$  -\/-no-unwinding-assertions -I /home/libraries/ {\tt-\tt-}memlimit 14000000 {\tt-\tt-}timeout 600}, outro para LLBMC que usando CLang\footnote{/usr/bin/clang++ -c -g -emit-llvm *.cpp -fno-exceptions}~\citep{CLANG} compila o código fonte desejado criando seu \textit{bitcode} e logo em seguida, também a partir de um arquivo identifica seus parâmetros iniciais e realiza a sua execução da ferramenta\footnote{llbmc *.cpp --ignore-missing-function-bodies --max-loop-iterations=$<$bound$>$ --no-max-loop-iterations-checks} e outro para DIVINE que também pré-compila os códigos fontes em C++ desejados criando seus respectivos \textit{bitcode}\footnote{divine compile --llvm -o main.bc *.cpp} e em seguida realiza a verificação sobre eles\footnote{divine verify main.bc --max-time=600 --max-memory=14000 -d}. O desdobramento de loops é definido para cada ferramenta, ou seja, o valor de $<$bound$>$ mas este valor varia entre os casos de teste. Por enquanto, LLBMC não suporta tratamento de exceção e os \textit{bitcodes} que foram criados sem exceção estavam a opção \textit{-fno-exceptions} ativa em seu compilador, se está opção estiver ativa LLBMC sempre abortará durante seu processo de verificação.
+
+A Tabela~\ref{table:results-of-ESBMC} mostra os resultados experimentais para as combinações entre QtOM e LLBMC, DIVINE e ESBMC$++$ usando Boolector como principal solucinador SMT. \textit{CT} representa o número de programas que utilizam o framework Qt em C$++$, \textit{L} representa a quantidade total de linhas de código, \textit{Time} representa o tempo total da verificação,\textit{P} representa o número de casos de teste sem defeitos, ou seja, resultados positivos corretos, \textit{N} representa o número de casos de teste com defeitos, ou seja, resultados negativos correto, \textit{FP} representa o número falsos positivos obtidos, ou seja, a ferramenta relata programas que estão corretos como incorretos, \textit{FN} representa o número de falsos negativos obtidos, ou seja, a ferramenta relata programas incorretos como corretos e \textit{Fail} representa o número de erros internos obtidos durante a verificação(\textit{por exemplo}, erros de análise). Vale ressaltar que ESBMC++ utilizando Boolector não a estouro de memória e tempo em qualquer caso de teste utilizado.
+
+\begin{table}[htb]
+%\begin{adjustwidth}{-0.5cm}{}
+\renewcommand\arraystretch{1.18}
+\setlength{\tabcolsep}{0.9pt}
+\begin{center} {\small
+\begin{tabular}{|l|l|r||r|r|r|r|r|r||r|r|r|r|r|r||r|r|r|r|r|r|r|}
+\hline
+& & & \multicolumn{6}{c||}{ESBMC++ v1.25.4}  & \multicolumn{6}{c||}{LLBMC v2013.1}  & \multicolumn{6}{c|}{DIVINE v3.3.2} \\\cline{4-21}
+{\bf Testsuite}    &{\bf CT}	& {\bf L}	& {\bf Tempo} 	& {\bf P}  	& {\bf N}  	& {\bf FP} 	& {\bf FN}  & {\bf Fail}  	& {\bf Time} 	& {\bf P}  	& {\bf N}  	& {\bf FP} 	& {\bf FN}  & {\bf Fail} & {\bf Time} 	& {\bf P}  	& {\bf N}  	& {\bf FP} 	& {\bf FN}  & {\bf Fail} \\\hline
+QHash 	   	& 74  	& 1170  	& 117.2   		& 33  	& 33  	& 4  		& 4	  	& 0   			& 37.13   		& 31  	& 37  	& 0  		& 6	  	& 0   		& 1432.5   	& 32  	& 33  	& 0  		& 1	  	& 8 \\ % OK
+\hline
+QLinkedList 	& 87 		& 1700  	& 77.0  		& 40   	& 39 		& 2   		& 2    	& 4  			& 23.3   		& 18  	& 41 		& 2	  	& 26	  	& 0  	         & 1907.6	   	& 30  	& 42  	& 1  		& 14	  	& 0    \\ % OK
+\hline	
+QList 		& 124  	& 2317  	& 102.1  		& 53 		& 55 		& 7   		& 9  	 	& 0  			& 19.4   		& 28  	& 56  	& 0	  	& 28	  	& 12  	& 2599.7   	& 52  	& 56  	& 0 		& 4	  	& 12    \\ % OK
+\hline
+QMap 		& 99  	& 1989  	& 277.2  		& 42 		& 39 		& 10   	& 8   		& 0  			& 406.4   		& 41  	& 46  	& 2  		& 8	  	& 2   		& 2109.9   	& 40  	& 44  	& 0  		& 5	  	& 10   \\ % OK
+\hline 
+QMultiHash 	& 24  	& 363   	& 186.4   		& 12    	& 12   	& 0   		& 0    	& 0  			& 30.8   		& 12  	& 12  	& 0  		& 0	  	& 0   		& 466.3     	& 13  	& 12  	& 0  		& 0	  	& 0   \\ % OK
+\hline
+QMultiMap 	& 26   	& 504   	& 136.9		& 13  	& 13   	& 0   		& 0    	& 0  			& 32.0   		& 13  	& 13  	& 0  		& 0	  	& 0   		& 549.9     	& 14  	& 13  	& 0  		& 0	  	& 0    \\ % OK
+\hline
+QQueue  		& 16   	& 299  	& 191  		& 8   		& 8  		& 0   		& 0    	& 0  			& 3.9   		& 8    	& 8    	& 0  		& 0	  	& 0   		& 339.7     	& 8  	        & 8    	& 0  		& 0	  	& 0    \\ % OK
+\hline
+QSet 		& 94   	& 1702  	& 500.5  		& 43   	& 43  	& 4  		& 4    	& 0  			& 132.6   		& 40  	& 44  	& 1  		& 5	  	& 4   		& 1897.2   	& 40  	& 41  	& 0  		& 0	  	& 13   \\ % OK
+\hline
+QStack 		& 12  	& 280  	& 14.5 		& 5 		& 5 		& 0  		& 0   		& 2  			& 2.2   		& 6	   	& 5    	& 1  		& 0	  	& 0   		& 262.1     	&6  	        & 6  	        	& 0  		& 0	  	& 0     \\ % OK
+\hline
+QVector 		& 152  	& 2582  	&157.3 		& 67  	&68  		& 7  		&8  		& 2  			& 1825.7  		& 44  	& 73  	& 0 		& 29	  	& 6    	& 3057.5   	& 68  	& 72  	& 0  		& 6	  	& 6  \\ % OK
+\hline\hline
+{\bf Total} 		& 708 	& 12903 	& 1760		& 316 	& 315	& 34 		& 35   	& 8  			& 2513.5  		& 241  	& 335  	& 6 		& 102	& 24  	& 14722.4   	& 303  	& 327  	& 1  		& 30	  	& 49  \\ % OK
+\hline
+\end{tabular} }
+\end{center}
+\caption{Resultados obtidos da comparação entre ESBMC++ v1.25.4 (usando Boolector como solucionador SMT), LLBMC v2013.1 e DIVINE v3.3.2.}
+\label{table:results-of-ESBMC}
+%\end{adjustwidth}
+\end{table}
+De acordo com a tabela acima, apenas $1,1$\% dos casos de teste com ESBMC$++$ alegaram falhas durante sua verificação que ocorreu quando a ferramenta não foi capaz de realizar a verificação de um determinado programa devido a erros internos enontrados. DIVINE e LLBMC apresentam taxas de falhas a cerca de $6,9$\% e $3,4$\%, respectivamente, quando tais ferramentas não conseguiram criar os \textit{bitcodes} dos programas utilizados ou durante verificação relaizada foi relatado estouro de memória ou de tempo. Em relação aos resultados $FP$, DIVINE obteve o melhor desempenho seguido por LLBMC e ESBMC$++$. Contudo, ESBMC$++$ obteve a taxa mais baixa em relação aos resultados de $FN$ seguido por DIVINE e LLBMC, devido a forma que os iterators estão implementados no modelo operacional proposto(QtOM), através de ponteiros e vetores com o objetivo de simular seus comportamentos de forma real(Ver seção~\ref{sec:container-model}). No entanto, a estrutura criada não cobre todos os comportamentos descritos na documentação do framework. Em particular, quando uma remoção de um elemento é realizada em um container em que existe mais de um iterator apontando para ele, todos os iterators que apontam para o elemento que foi removido serão perdidos. Desta forma, este comportamento afetará as pós-condições de um programa que influenciam diretamente os resultados obtidos em relação a {\it FP} e {\it FN}. Vale ressaltar que os vetores e ponteiros têm sido extensivamente utilizados de modo a obter estruturas simples, isto é, sem classes e estruturas em sua representação o que diminui a complexidade do processo de verificação(ver seção~\ref{sec:postconditions}). Por fim, a combinação entre os resultados de ESBMC$++$ e QtOM em um verificador robusto ainda possui algumas lacunas a serem preenchidas sobre o suporte da linguagem C$++$ como descrito por Ramalho{\it et al.}~\cite{ECBS13}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resumo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Resumo
+
+%Outros topicos
+%\input{5_k-induction/algoritmo.tex}

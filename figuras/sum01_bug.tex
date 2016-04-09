@@ -1,0 +1,15 @@
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.5cm,
+                    semithick]
+   \tikzstyle{every state}=[rectangle,rounded corners=10pt]
+
+  \node[initial,state] 		(A)                    {$init$};
+  \node[state]         		(B) [below of=A] {compute sn};
+  \node[state]         		(C) [right of=B] {increment i};
+  \node[state, accepting]	(D) [below of=C] {terminate};
+
+   \path (A) edge [left]	node {$n \geq 1 \wedge i < 10$} (B)
+         (B) edge [bend left]	node {$ \tau $} (C)
+	 (C) edge [bend left]	node {$i < 10$} (B)
+	     edge		node {$i > n$} (D)
+	     edge [loop right]	node {$i \geq 10$} ();
+\end{tikzpicture}

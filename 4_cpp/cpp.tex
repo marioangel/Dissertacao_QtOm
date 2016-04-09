@@ -1,0 +1,185 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Modelo Operacional para containers}
+\label{chapter:container-model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+O módulo Qt Core possui um template base de classes container como alternativa para containers STL usado na linguaguem C++~\cite{Qt15}. Por exemplo, durante desenvolvimento de uma aplicação é necessário a criação de uma pilha de tamanho variável usando QWidgets, uma alternativa seria o uso de QStack$<$QWidget$>$. Além disso, estes containers também usam iterators Java- e STL-style, de modo a se deslocar ao longos dos dados armazenados na estrutura criada.  
+
+Desta forma, esses tipos de classes podem ser classificados em dois subgrupos: sequenciais e associativas, dependendo da estrutura de armazenamento desenvolvida. Classes QList, QLinkedList, QVector, QStack e QQueue são classificadas como estruturas sequenciais, enquanto as classes QMap, QMultiMap, QHash, QMultiHash e QSet pertencem ao grupo das estruturas associativas.
+
+Por fim, de acordo com a seção~\ref{sec:language} uma linguagem principal é desenvolvida com o objetivo de formalizar a implementação de cada classe container, e em seguida, as seções~\ref{sec:sequential} e ~\ref{sec:associative} descrevem as implementações formais para os containers sequenciais e associativos.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Linguagem}
+\label{sec:language}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Com o intuito de implementar o modelo operacional para Qt containers, a formalização da linguagem para o container core descrita por Ramalho\textit{et al.}~\cite{ECBS13} é utilizada e estende-se até a formulação das propriedades ${\cal C}$ e ${\cal P}$. Desta forma, a linguagem core é adaptada com o objetivo de formular adequadamente a verificação de ambos containers de Qt seja ele sequencial ou associativo como mostrado na figura~\ref{ccl-fig}.  
+
+\begin{figure}[htb]
+\[\begin{array}{r@{\:\:}r@{\:\:}l}
+  V  & ::= &
+    v \:|\: \mathit{I_v} \:|\: \mathit{P_v}
+\\[0.5ex]
+  K  & ::= &
+    k \:|\: \mathit{I_k} \:|\: \mathit{P_k}
+\\[0.5ex]
+   \mathit{I} & ::= &
+     i \:|\: \mathit{C.begin()} \:|\: \mathit{C.end()}
+\\  & | &
+     \mathit{C.insert(\mathit{I}, \mathit{V}, \mathbb{N})} \:|\: \mathit{C.erase(\mathit{I})} \:|\: \mathit{C.search(\mathit{V})}
+\\  & | &
+     \mathit{C.insert(\mathit{K}, \mathit{V})} \:|\: \mathit{C.search(\mathit{K})}
+\\[0.5ex]
+   P  & ::= &
+     p \:|\: P (+ \:|\: - ) P
+       \:|\: \mathit{C_k} \:|\: \mathit{C_v} \:|\: \mathit{I_k} \:|\: \mathit{I_v}
+\\[0.5ex]
+   C  & ::= &
+     c 
+\\[0.5ex]
+  \mathbb{N}  & ::= &
+     n \:|\: \mathbb{N} (+ \:|\: * | \ldots) \mathbb{N}
+       \:|\: \mathit{I_{pos}}
+       \:|\: \mathit{C_{size}}
+  \end{array}
+\]
+  \caption{Sintaxe de container Core para QtOM.}
+  \label{ccl-fig}
+\end{figure}
+
+De acordo com a figura acima, os elementos básicos estão divididos em dois domínios sintáticos. $\mathit{V}$ para valores e $\mathit{K}$ para as chaves. No entanto, os demais domínios, $\mathit{I}$, $\mathit{P}$, $\mathbb{N}$ e $\mathit{C}$ são mantidos por iterators, ponteiros, índices inteiros e expressões container adequadas, respectivamente. Assim, as variáveis $\mathit{k}$ e $\mathit{v}$, do tipo $\mathit{K}$ e $\mathit{V}$ são adicionados respectivamente. Dessa forma, a notação $\mathit{I_v}$ representa um valor armazendo em um container de base em uma posição direcionada por um iterator  $\mathit{I}$ e $\mathit{I_k}$ representa uma chave. Tais notações são abreviações para $\mathit{store(i,I_{pos},I_v)}$ e $\mathit{store(i,I_{pos},I_k)}$, respectivamente onde a expressão $\mathit{store}(t, f, v)$ indica uma tupla $t$ que no campo $f$ possui um valor $v$. Da mesma forma que $\mathit{P_k}$ e $\mathit{P_v}$ representam chave e valor em uma posição $\mathit{P}$ respectivamente.
+
+Entretanto, três outros métodos foram incluídos definidos como, $\mathit{C.insert(k, v)}$, o qual, insere um elementro numa estrutura container, com uma chave $\mathit{k}$ e um valor $\mathit{v}$, possui como retorno um iterator que aponta para o novo elemento cuja posição depende do tipo de container usado, $\mathit{C.search(k)}$, o qual, retorna um iterator que aponta para a primeira evidência de um elemento com uma chave $\mathit{k}$ correspondente. De modo semelhante, $\mathit{C.search(v)}$ também retorna um iterator que aponta para a primeira evidência de um elemento mas com um valor $\mathit{k}$ correspondente. No entanto, ambos os métodos se não existir nenhuma chave ou valor correspondente é retornado  $\mathit{C.end()}$. Por fim, $\mathit{C_k}$ é um endereço de memória que armazena o início das chaves dos containers, assim como, $\mathit{C_v}$ é usado para armazenar os valores dos containers.
+
+Todos os elementos restantes, a partir da linguaguem Core menncionada, são usadas aqui, de acordo como descrito por  Ramalho \textit{et al.}~\cite{ECBS13}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Containers sequenciais}
+\label{sec:sequential}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Containers sequenciais em Qt são criados em uma estrutura, qual tem como objetivo armazenar elemento e uma determinada ordem sequencial~\cite{Deitel}. De acordo com a documentação do Qt, QList é a classe container frequentemente mais utilizada e possui uma estrutura em formato de lista, a fim de armazenar os valores que podem ser acessados através de um índice. Da mesma forma, QLinkedList também possui um estrutura em forma de lista embora seja acessada atráves de iterators ao invés de índices inteiros. Na classe QVector há presente uma estrutura de array redimensionável e por fim, QStack e QQueue fornecem estruturas que implementam diretivas como o último a entra é o primeiro a sair(em inglês, \textit{last in first in}) e o primeiro a entrar é último a sair(em inglês,\textit{first in first out}), respectivamente.
+
+Para simular adequadamente os containers sequenciais, os modelos propostos se utilizam da linguagem core a qual foi descrita na seção~\ref{sec:language}. Os containers sequenciais são implementados a partir de um ponteiro $\mathit{C_v}$ para os valores do container e também com um $\mathit{C_{size}}$, o qual é utilizado para representar o tamanho do container (onde $\mathit{C_{size}} \in \mathbb{N}$). Dessa forma, os iterators são modelados por meio de duas variáveis, uma do tipo inteiro que é denominado de $\mathit{i_{pos}}$ e contém o valor do índice apontado por um iterator e uma do tipo $P$ que é chamado por $\mathit{I_v}$ e aponta para um container subjacente.
+
+Vale ressaltar que todos os métodos, a partir dessas bibliotecas, podem ser expressos em variações simplificadas de três operações principais, insertion($\mathit{C.insert(\mathit{I}, \mathit{V}, \mathbb{N})}$), deletion($\mathit{C.erase(\mathit{I})}$) e search($\mathit{C.search(\mathit{V})}$). A partir da transformação SSA os efeitos adversos sobre iterators e containers são explícitos para que as operações retornem novos iterators e containers.
+
+Por exemplo, um container $c$ com uma chamada \textit{c.search}($v$) considerando-se realizar uma pesquisa por um elemento $v$ no container desenvolvido. Então, se esse elemento for encontrado, é retornado um iterator que aponta para o respectivo elemento, caso contrário, é retornado um iterator que imediatamente aponta para a posição após o último elemento do container({\it isto é}, $\mathit{c.end()}$). Desta forma, a instrução ``$\mathit{c.search}(v);$'' torna-se ``$(c',i')=\mathit{c.search}(v);$'' que possuem efeitos adverso de forma explícita. Assim, a função de tradução $\cal C$ descreve premissas que estão relacionadas com o "antes"(em inglês, \textit{before}) e o "depois"(em inglês, \textit{after}) das respectivas versões das variáveis do modelo. Na verdade, notações com apóstrofo ({\it por exemplo}, $c'$ and $i'$) representam o estado das variáveis do modelo após realizar a execução da respectiva operação e notações simplificadas ({\it por exemplo}, $c$ and $i$) representam os estados anteriores. Além disso, $select(c, i = lower_{bound} \ldots i = upper_{bound})$ representa uma expressão de loop (como, $for$ e $while$) onde cada valor de $c$, a partir de posições  $lower_{bound}$ a $upper_{bound}$, será selecionado. Da mesma forma, $store(c_{1}, lower_{bound}^{1},select(c_{2},lower_{bound}^{2})) \ldots store(c_{1},upper_{bound}^{1},select(c_{2},upper_{bound}^{2}))$ também representa uma expressão de loop, onde cada valor de $c_{2}$, a partir de posições $lower_{bound}^{2}$ a $upper_{bound}^{2}$, serão armazenados em $c_{1}$ nas posições $lower_{bound}^{1}$ a $upper_{bound}^{1}$, respectivamente. Sendo assim,
+%
+\[\begin{array}{lll}
+\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.search}(v)):=}\\
+  & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
+  & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_v, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) == v \\
+%  & & \textit{select}(\ldots(\textit{select}(c_v, i_{pos} = 0),\\
+%  & & \:\:\:\:\:\:\ldots,\\
+%  & & i_{pos} = c_{size} - 1))) == v \\
+  & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := \textit{ite}(g_0, i_{pos}, c_{size})}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v.}\\
+\end{array}\]
+
+Em relação aos containers sequenciais, os métodos $\mathit{C.insert(\mathit{I}, \mathit{V}, \mathbb{N})}$ e $\mathit{C.erase(\mathit{I})}$ se comportam como descrito por Ramalho{\it et al.}~\cite{ECBS13}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Containers Associativos}
+\label{sec:associative}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+O grupo dos containers associativos possuem cinco classes: QMap, QMultimap, QHash, QMultiHash e QSet. QMap tem como abordagem um array associativo que conecta cada umas das chaves, de um certo tipo $K$, para um valor de um certo tipo $V$, onde as chaves associadas são armazenadas em ordem. Por um lado, QHash apresenta um comportamento ao de QMap, contudo, os dados são armazenados numa ordem arbitrária. QMultiMap e QMultihash representam respectivamente subclasses de QMap e QHash, ainda assim, ambas classes especificam interfacer aonde uma chave pode ser associada a diversos valores. Por fim, um valor único a partir de um conjunto matemático é a abordagem definida por QSet.
+
+Com o intuito de implementar containers associativos, um ponteiro $c_v$ é definido para os valores armazenados no container a ser desenvolvido e um ponteiro $c_{size}$ também é usado para guardar o tamanho do container. No entanto, um ponteiro $c_k$ é utilizado para a chave do container. Em particular, $c_k$ e $c_v$ estão conectados através de um índice, ou seja, dado um container $c$ que contém uma chave $k$ e um valor $v$ assume-se que
+
+\[\begin{array}{r@{\:\:}c@{\:\:}l}
+\left[\forall \omega \in \mathbb{N} | 0 \leq \omega < c_{size}\right]
+\end{array}
+\]
+
+\noindent e
+\[\begin{array}{r@{\:\:}c@{\:\:}l}
+k \rightarrow v \iff select\left(c_k,\omega\right) = k \wedge select\left(c_v,\omega\right) = v,
+\end{array}
+\]
+
+\noindent aonde $(k \rightarrow v)$ indica que uma chave $k$ é associada a um valor $v$ and $\omega$ representa uma posição válida em $c_k$ e $c_v$.Além disso, a função \emph{select(a, i)} indica o valor de $a$ em um índice $i$~\cite{ECBS13}. Novamente, todas as operações dessas bibliotecas podem ser expressadas a partir de uma variação simplificada dos três principais como citado na seção~\ref{sec:sequential}.
+
+Portanto, a operação de inserção para containers associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no container $c$, o valor $v$ associado com a chave $k$, porém, se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um iterator que aponta para o elemento inserido ou modificado. Deste modo,
+%
+\[\begin{array}{lll}
+\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} + 1}\\
+  & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
+  & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_k, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) == k \\
+  %& \wedge\: g_0 := &\!\!\!\!(\textit{select}(\ldots(\textit{select}(\\
+  %& & \textit{select}(\ldots(\textit{select}(c_k, i_{pos} = 0),\\
+  %& & \:\:\:\:\:\:\ldots,\\
+  %& & i_{pos} = c_{size} - 1))) = k \\
+  & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := \textit{ite}(g_0, i_{pos}, c_{size})}\\
+  & \wedge\: {c'}_k := &\!\!\!\!\textit{store}(c_k,{i'}_{pos} + 1, \textit{select}(c_k, {i'}_{pos})),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_k, c_{size}, \textit{select}(c_k, c_{size} - 1)))\\
+  %& \wedge\: {c'}_k := &\!\!\!\!\textit{store}(\ldots(\textit{store}(c_k\\
+  %& & {i'}_{pos} + 1, \textit{select}(c_k, {i'}_{pos})),\\
+  %& & \:\:\:\:\:\:\ldots,\\
+  %& & c_{size}, \textit{select}(c_k, c_{size} - 1)))\\
+  & \wedge\: {c'}_v := &\!\!\!\!\textit{store}(c_v,{i'}_{pos} + 1, \textit{select}(c_v, {i'}_{pos})),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_v, c_{size}, \textit{select}(c_v, c_{size} - 1)))\\
+  %& \wedge\: {c'}_v := &\!\!\!\!\textit{store}(\ldots(\textit{store}(c_v\\
+  %& & {i'}_{pos} + 1, \textit{select}(c_v, {i'}_{pos})),\\
+  %& & \:\:\:\:\:\:\ldots,\\
+  %& & c_{size}, \textit{select}(c_v, c_{size} - 1)))\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_k := \textit{store}(c_k, {i'}_{pos}, k)}\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_v := \textit{store}(c_v, {i'}_{pos}, v)}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_k := {c'}_k}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v.}\\
+\end{array}\]
+%
+Em uma outra versão do método de inserção onde a ordem das chaves possuem importância. Desta forma, todas as variáveis acima referidas são considerados e uma comparação é realizada, a fim de assegurar que o novo elemento é inserido da ordem desejada. Assim,
+%
+\[\begin{array}{lll}
+\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} + 1}\\
+  & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
+  & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_k, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) > k \\
+  & \wedge\: g_1 := &\!\!\!\!\textit{select}(c_k, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) == k \\
+  & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := \textit{ite}(g_0 \vee g_1, i_{pos}, c_{size})}\\
+  & \wedge\: {c'}_k := &\!\!\!\!\textit{store}(c_k,{i'}_{pos} + 1, \textit{select}(c_k, {i'}_{pos})),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_k, c_{size}, \textit{select}(c_k, c_{size} - 1)))\\
+  & \wedge\: {c'}_v := &\!\!\!\!\textit{store}(c_v,{i'}_{pos} + 1, \textit{select}(c_v, {i'}_{pos})),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_v, c_{size}, \textit{select}(c_v, c_{size} - 1)))\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_k := \textit{store}(c_k, {i'}_{pos}, k)}\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_v := \textit{store}(c_v, {i'}_{pos}, v)}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_k := {c'}_k}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v.}\\
+\end{array}\]
+%
+Em casos onde chaves com vários valores associados são permitidos, a comparação feita para verificar se o elemento já existe com uma respectiva chave é ignorada. Por fim, com o propósito de realizar uma exclusão o método apagar(\textit{em inglês}, erase) é criado, o qual é respresentado por $erase$($i$) onde $i$ é um iterator que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
+%
+\[\begin{array}{lll}
+\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.erase}(i)):=}\\
+  & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} - 1}\\
+  & \wedge\: {c'}_k := &\!\!\!\!\textit{store}(c_k,{i'}_{pos}, \textit{select}(c_k, {i'}_{pos} + 1)),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_k, c_{size} - 2, \textit{select}(c_k, c_{size} - 1)))\\
+  & \wedge\: {c'}_v := &\!\!\!\!\textit{store}(c_v,{i'}_{pos}, \textit{select}(c_v, {i'}_{pos} + 1)),\\
+  & & \:\:\:\:\:\:\ldots,\\
+  & & \textit{store}(c_v, c_{size} - 2, \textit{select}(c_v, c_{size} - 1)))\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_k := {c'}_k}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v}\\
+  & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := {i}_{pos} + 1.}\\
+\end{array}\]
+%
+Nota-se que tais modelos criados induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um iterator sobre o respectivo container subjacente, isto é, dado um container $c$ com os pointeiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito na seção~\ref{sec:smt-bmc}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resumo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Resumo
+
+
+%Chama outro arquivo%
+%\input{4_cpp/templates.tex}

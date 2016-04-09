@@ -1,0 +1,125 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{SMT baseado em técnicas BMC para programa em C++ que utilizam o framework Qt}
+\label{chapter:smt-bmc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Neste capítulo, é descrito todo o processo de verificação com o ESBMC++, inicialmente o parser utilizado já havia sido mencionado na seção~\ref{sec:arch} e nesta etapa é onde ESBMC++ transforma o código de entrada em uma árvore IRep, a qual, possui todas as informações necessárias para o processo de verificação e ao fim desta etapa ESBMC++ identifica cada estrutura presente no respectivo programa. No entanto, ESBMC++ suporta apenas a verificação de programas ANSI-C/C++ apesar de os códigos analisados do Qt serem escritos em C++ mas suas bibliotecas nativas possuem muitas estruturas hierárquicas e complexas. Desta maneira, o processo de verificação para essas bibliotecas e suas respectivas implementações otimizadas iriam afetar de forma desnecessária os VCs e além do mais poderiam não conter qualquer afirmação a cerca de propriedades específicas tornando a verificação uma tarefa inviável.
+
+O uso de QtOm proposta neste capítulo possui o objetivo de solucinar o problema descrito acima por ser uma representação simplificada, a qual, considera a estrutura de cada biblioteca e suas respectivas classes associadas, incluindo assim atributos, assinaturas de métodos, protótipos de funções e premissas, garantindo assim que cada propriedade seja formalmente verificada. Na verdade, existem muitas propriedades a serem verificadas como acesso de memória inválida, valores negativos de tempo de período, acesso a arquivos inexistentes e ponteiros nulos, juntamente com pré e pós-condições que são necessárias para executar corretamente os métodos de Qt. Vale ressaltar que QtOM é ligado de forma manual a ESBMC++ logo no início do processo de verificação como mostrado na figura~\ref{figure:Fig2}. Desta forma, QtOM pode auxiliar o processo do parser na criação de uma representação intermediária em C++ que possui todas as premissas indispensáveis para a verificação das propriedas acima mencionadas. Por fim, o fluxo de verificação segue de maneira tradicional.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=4.5in]{figuras/Fig2.pdf}
+  \caption{Conectando QtOM a ESBMC$++$.}
+  \label{figure:Fig2}
+\end{figure}
+
+Comparando com um trabalho anterior~\cite{monteiro2015}, QtOM inclui atualmente uma representação inicial para todas as bibliotecas do módulo QtCore e QtGui, assim como, fornece um suporte completo a todas as classes container que são amplamente utilizadas em aplicações reais.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Pré-condições}
+\label{sec:preconditions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Ao se utilizar modelos simplificados é possível diminuir a complexidade que é associado às árvores IRep. Desta forma, ESBMC$++$ é capaz de construir árvores IRep de uma forma muito rápida, com baixa complexidade mas que englobam todas as propriedades necessárias para a verificação dos programas desejados. Além disso, o uso de premissas se torna indispensável para verificar as propriedades relacionadas aos métodos do framework Qt, assim como, as suas respectivas execuções que não são contempladas pelas bibliotecas padrões. Deste modo, tais premissas são integradas aos respectivos métodos com o objetivo de detectar violações de acordo com o uso incorreto do framework Qt.
+
+Em resumo, baseado na adição de premissas, ESBMC$++$ é capaz de verificar propriedas específicas contidas em QtOM e identificar como pré-condições partes das propriedades relacionadas, ou seja, as propriedades que devem ser mantidas de forma que haja uma execução correta de um determinado método ou função. Por exemplo, a abordagem proposta pode verificar se um parâmetro, que representa uma determinada posição dentro de uma vetor é maior ou igual a zero.
+
+Conforme o fragmento de código mostrado na figura~\ref{fig:Fig3} presente na aplicação chamada GeoMessage Simulator, o qual, fornece mensagens para aplicações e componentes do sistema na plataforma ArcGIS~\cite{geomessage}. Como mostrado, o método $setFileName$() que manipula uma pré-condição (veja linha 6), aonde $m\_inputFile$ é um objeto da classe QFile que proporciona uma interface de leitura e escrita para se manipular arquivos~\cite{Qt15}. Ao ser definido um nome ao arquivo, o objeto $fileName$ de QString não pode ser nulo. Desta forma, quando $setFileName$() é chamado, ESBMC$++$ interpreta o seu comportamento de acordo com o implementado em QtOM.
+
+\begin{figure}[htb]
+\centering
+\begin{minipage}{0.6\textwidth}
+\begin{lstlisting}
+QString loadSimulationFile( const QString &fileName )
+{
+   if(m_inputFile.isOpen())
+     m_inputFile.close();
+     
+   m_inputFile.setFileName(fileName);
+   
+   //Check file for at least one message
+   if( !doInitialRead() ) 
+   {
+      return QString(m_inputFile.fileName() + "is an empty message file");
+   }
+   else
+   {
+      return NULL;
+   }
+}
+\end{lstlisting}
+\end{minipage}
+\caption{Fragmento de código da função \textit{loadSimulationFile} presente no benchmark Geomessage Simulator.}
+\label{fig:Fig3}
+\end{figure}
+
+De acordo com a figura~\ref{fig:Fig4} que mostra um trecho do modelo operacional correspondente à classe QFile com uma implementação de $setFileName$() (veja as linhas 5-10), onde apenas os pré-requisitos são verificados. Em particular, se o objeto QString passado como um parâmetro não estiver vazio (veja a linha 6), a operação é válida e, consequentemente, a premissa estipulada é considerada \textit{verdadeira}. Caso contrário, se uma operação errada for realizada, como uma string vazia for passada como parâmetro, a premissa estipulada é considerada \textit{falsa}. Nesse caso, ESBMC$++$ retornaria um contra-exemplo com todos os passos necessários para reproduzir a execução de tal violação além de descrever o erro da respectiva premissa violada.\\
+
+
+\begin{figure}[htb]
+\centering
+\begin{minipage}{0.5\textwidth}
+\begin{lstlisting}
+class QFile {
+...
+    QFile( const QString &name ) { ... }
+    ...
+    void setFileName( const QString &name ){
+       __ESBMC_assert( !name.isEmpty(), "The string must not be empty" );
+       __ESBMC_assert( !this->isOpen(), "The file must be closed" );
+    }
+    ...
+};
+\end{lstlisting}
+\end{minipage}
+\caption{Modelo operacional de $setFileName$() presente na classe QFile.}
+\label{fig:Fig4}
+\end{figure}
+
+Do ponto de vista da verificação de software, existem métodos/funções que também não apresentam qualquer propriedade a ser verificada como aqueles cuja única finalidade é imprimir valores na tela. Dado que ESBMC$++$ realiza o processo verificação a nível de software ao invés de testar o hardware, o qual, em relação a corretude a cerca do valor impresso não foi abordado neste trabalho. Por fim, tais métodos só há suas assinaturas, de modo que o verificador proposto seja capaz de reconhecer a estrutura desejada para que durante o processo de análise seja construído uma árvores IRep confiável. No entanto, eles não apresentam qualquer modelagem (corpo de função), uma vez que não exista nenhuma propriedade a ser verificada.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Pós-condições}
+\label{sec:postconditions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Em aplicações reais há métodos que não contêm apenas propriedades que serão manuseadas como pré-condição mas tambem serão considerados pós-condição~\cite{monteiro2015}. Por exemplo, de acorodo com a documentação do Qt~\cite{Qt15}, a função $setFileName$ conforme descrita na seção\ref{sec:preconditions} não dever ser utilizada se o respectivo arquivo já estiver sendo utilizado, o que é verificado em seu código fonte a partir da estrutura $if$ presente nas linhas $3$ e $4$ visto na figura \ref{fig:Fig3}.
+
+No entanto, a instrução executada na linha $4$ (veja Fig.~\ref{fig:Fig3}) seria não determinística para o ESBMC$++$, assim como, a premissa presente na linha $8$ do modelo operacional associado como mostrado na figura~\ref{fig:Fig4}, uma vez que não há como se afirma se o respectivo arquivo está sendo utilizado ou não. Desta forma, é evidente que será necessário simulador o comportamento do método $isOpen$() com o intuito de verificar de forma coerente as propriedades relacionadas com a manipulação de arquivos. Como a classe QFile indiretamente herda os métodos $open$() e $isOpen$(), a partir da classe QIODevice, para simulações comportamentais desses métodos construi-se um modelo operacional para QIODevice como mostrado na figura~\ref{fig:Fig5}.
+
+\begin{figure}[htb]
+\centering
+\begin{minipage}{0.47\textwidth}
+\begin{lstlisting}
+class QIODevice {
+    ...
+    bool QIODevice::open(OpenMode mode){
+       this->__openMode = mode;
+       if (this->__openMode == NotOpen)
+           this->__isOpen = false;
+       this->__isOpen = true;
+    }
+    
+    bool isOpen() const{
+       return this->__isOpen;
+    }
+    ...
+private:
+    bool __isOpen;
+    OpenMode __openMode;
+    ...
+};
+\end{lstlisting}
+\end{minipage}
+\caption{Modelo operacional para os métodos $open$() e $isOpen$() na classe QIODevice.}
+\label{fig:Fig5}
+\end{figure}
+
+Por fim, todos os métodos que resultam em uma condição que dever ser mantida a fim de permitir uma adequada execução de futuras instruções, deve apresentar uma simulação do seu comportamento. Consequentemente, um determinado modelo operacional deve seguir de forma rigorosa as especificações descritas na documentação oficial do framework~\cite{Qt15} com o objetivo de se obter o mesmo comportamento, assim como, incluir mecanismos necessários à verificação do código. Como resultado, é necessário verificar o nível de equivalência entre o modelo operacional e a biblioteca original, com o intuito de se comparar o comportamento de ambos, tendo em vista que os modelos operacionais são uma cópia simplificada das bibliotecas originais como todos os mecanismos necessários para a verificação do código.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resumo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Resumo
