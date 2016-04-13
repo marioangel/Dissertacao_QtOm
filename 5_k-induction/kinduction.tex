@@ -39,7 +39,7 @@ Todos os experimentos foram realizados em um Intel Core $i7$-$4790$ com $3.60$ G
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Verificação dos resultados para o conjunto de casos de teste desenvolvidos}
+\section{Verificação dos resultados para o conjunto de casos de teste desenvolvidos}
 \label{sec:evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -49,7 +49,7 @@ As ferramentas utilizadas foram executadas seguindo três roteiros. Um para ESBMC
 
 A Tabela~\ref{table:results-of-ESBMC} mostra os resultados experimentais para as combinações entre QtOM e LLBMC, DIVINE e ESBMC$++$ usando Boolector como principal solucinador SMT. \textit{CT} representa o número de programas que utilizam o framework Qt em C$++$, \textit{L} representa a quantidade total de linhas de código, \textit{Time} representa o tempo total da verificação,\textit{P} representa o número de casos de teste sem defeitos, ou seja, resultados positivos corretos, \textit{N} representa o número de casos de teste com defeitos, ou seja, resultados negativos correto, \textit{FP} representa o número falsos positivos obtidos, ou seja, a ferramenta relata programas que estão corretos como incorretos, \textit{FN} representa o número de falsos negativos obtidos, ou seja, a ferramenta relata programas incorretos como corretos e \textit{Fail} representa o número de erros internos obtidos durante a verificação(\textit{por exemplo}, erros de análise). Vale ressaltar que ESBMC++ utilizando Boolector não a estouro de memória e tempo em qualquer caso de teste utilizado.
 
-\begin{table}[htb]
+\begin{table}[!htb]
 %\begin{adjustwidth}{-0.5cm}{}
 \renewcommand\arraystretch{1.18}
 \setlength{\tabcolsep}{0.9pt}
@@ -88,6 +88,77 @@ QVector 		& 152  	& 2582  	&157.3 		& 67  	&68  		& 7  		&8  		& 2  			& 1825.7 
 \end{table}
 De acordo com a tabela acima, apenas $1,1$\% dos casos de teste com ESBMC$++$ alegaram falhas durante sua verificação que ocorreu quando a ferramenta não foi capaz de realizar a verificação de um determinado programa devido a erros internos enontrados. DIVINE e LLBMC apresentam taxas de falhas a cerca de $6,9$\% e $3,4$\%, respectivamente, quando tais ferramentas não conseguiram criar os \textit{bitcodes} dos programas utilizados ou durante verificação relaizada foi relatado estouro de memória ou de tempo. Em relação aos resultados $FP$, DIVINE obteve o melhor desempenho seguido por LLBMC e ESBMC$++$. Contudo, ESBMC$++$ obteve a taxa mais baixa em relação aos resultados de $FN$ seguido por DIVINE e LLBMC, devido a forma que os iterators estão implementados no modelo operacional proposto(QtOM), através de ponteiros e vetores com o objetivo de simular seus comportamentos de forma real(Ver seção~\ref{sec:container-model}). No entanto, a estrutura criada não cobre todos os comportamentos descritos na documentação do framework. Em particular, quando uma remoção de um elemento é realizada em um container em que existe mais de um iterator apontando para ele, todos os iterators que apontam para o elemento que foi removido serão perdidos. Desta forma, este comportamento afetará as pós-condições de um programa que influenciam diretamente os resultados obtidos em relação a {\it FP} e {\it FN}. Vale ressaltar que os vetores e ponteiros têm sido extensivamente utilizados de modo a obter estruturas simples, isto é, sem classes e estruturas em sua representação o que diminui a complexidade do processo de verificação(ver seção~\ref{sec:postconditions}). Por fim, a combinação entre os resultados de ESBMC$++$ e QtOM em um verificador robusto ainda possui algumas lacunas a serem preenchidas sobre o suporte da linguagem C$++$ como descrito por Ramalho{\it et al.}~\cite{ECBS13}.
 
+Vale mencionar que o nível de complexidade ao se verificar o código fonte de um programa aumenta de acordo com a quantidade de linhas ele tiver, assim como, a quantidade de estruturas que possuir. No entanto, de acordo como mostrado na figura~\ref{figure:time}, os conjuntos de teste \textit{QMap} e \textit{QSet} apresentam os maiores tempos durante o processo de verificação ao se utilizar ESBMC$++$, apesar de \textit{QVector} ser o mais extenso conjunto de casos de teste existente. Isso acontece devido não importar somente o número de linhas de código a ser analisado mas também a quantidade de loops presente no programa o que afeta diretamente os tempos de verificação. Na realidade, as estruturas internas do modelo operacional associadas a QMap e QSet contém mais loops do que as demais, desta forma, obtendo-se tempos de verificação mais longos. Como também visto na figura~\ref{figure:time}, LLBMC apresenta um maior tempo de verificação ao se utilizar o conjunto de teste \textit{QVector}, na qual isto ocorre devido a dois casos de teste onde houve estouro do tempo estimado para que seja realizada a verificação. Além disso, DIVINE é a ferramenta que apresenta o menor desempenho entre as citadas, pois, seu processo de criação do \textit{bitcode} é mais custoso do que a realização da verificação sobre o mesmo. Dessa forma, os conjuntos de teste com mais programas a serem analisados obtiveram os maiores tempos ao se utilizar DIVINE que no caso são {\it QVector}, {\it QList}, {\it QMap}, {\it QLinkedList} e {\it QSet}.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=4.5in]{figuras/Time.pdf}
+  \caption{Comparação entre os tempos de verificação em relação a ESBMC++, LLBMC e DIVINE.}
+  \label{figure:time}
+\end{figure}
+
+A figura~\ref{figure:coverage} mostra todos os verificadores que obtiveram uma taxa de corbetura acima de 80\% para os containers do tipo associativo. Contudo, LLBMC não se manteve com a mesma taxa ao analisar os containers do tipo sequencial. Vale ressaltar que todos os casos de teste a partir dos conjuntos de teste {\it QMultiMap} e {\it QMultiHash} foram verificados corretamente por todos os verificadores utilizados. Os conjuntos de teste {\it QHash}, {\it QMap}, e {\it QSet}, por sua vez, apresentaram uma taxa média de até $6,7$\% para resultados falsos positivos e falsos negativos, ou seja, de $3$ a $18$ casos de teste dos $267$ casos de teste devido as limitações relacionadas a representação interna dos iterators. Além disso, LLBMC e DIVINE, respectivamente, não conseguiram verificar cerca de $4,5$\% e $13,9$\% dos casos de teste dos containers associativos, ou seja, $12$ e $13$ dos $267$ casos de teste devido a falhas no processo de criação do \textit{bitcode}. Em relação aos containers do tipo sequencial, LLBMC apresentou taxas de cobertura baixas para os conjuntos de teste {\it QVector}, {\it QLinkedList} e {\it QList} cerca de $67,7$\% a $77$\%, ou seja, $84$/$117$ de $124$/$152$ dos casos de teste respectivamente, uma vez que cerca de $22,9$\% dos casos de teste($83$ dos $363$ analisados) apresentaram resultados falsos negativos devido a também a problemas com a representação interna dos iterators. Além disso, cerca de $5$\% dos casos de teste($18$ dos $363$ analisados) não haviam sido verificados por LLBMC, uma vez que não foi capaz de criar os \textit{bitcodes} desejados. ESBMC$++$ e DIVINE, por sua vez, apresentaram uma taxa de erro de no máximo de $6,6$\%, ou seja, 24 dos 363 casos de teste para os conjuntos de teste {\it QVector}, {\it QLinkedList} e {\it QList} devido a erros de análise em suas pós-condições. Além disso, todos os casos de teste dos conjuntos de teste {\it QQueue} e {\it QStack} foram verificados corretamente, com exceção de dois casos presente em {\it QStack}, pois, ao se utilizar o solucinador Boolector com a ferramenta ESBMC$++$ não foi possível obter-se uma solução para as fórmulas SMT criadas a partir deles para os casos analisados. 
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=4.5in]{figuras/Coverage.pdf}
+  \caption{Comparação entre a taxa de cobertura em relação a ESBMC++, LLBMC e DIVINE.}
+  \label{figure:coverage}
+\end{figure}
+
+Os conjuntos de teste {\it QList}, {\it QMap}, {\it QVector} e {\it QSet} possuem mais resultados falsos positivos e negativos em seus teste ao se utilizar ESBMC$++$ do que as outras ferramentas. A taxa de cobertura a cerca dos casos de teste verificados corretamente se encontra em torno de $80$ a $90$\% respectivamente, o que demonstra a eficácia em relação a verificação realizada uma vez que cada caso de teste verifica características diferentes de diferentes containers.
+
+Vale ressaltar que ESBMC$++$ foi capaz de identificar $89,3$\% dos erros nos casos de teste utilizados, ou seja, $631$ dos $708$ casos de testes utilizados possuiam erros o que demonstra também a sua eficácia. Similarmente, LLBMC e DIVINE apresentam, respectivamente, taxas com $81,4$\% e $89$\% ,isto é, $576$ e $630$ dos $708$ casos de teste utilizados possuiam erros, isso também demonstra uma boa adequação do modelo operacional proposto(QtOM) combinado com outras ferramentas de verificação. Como consequência, a metodologia proposta não apenas se limita a uma determinada ferramenta, podendo-se adaptar para aplicações específicas em que algumas abordagens são mais adequedas do que outras. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Resultados da verificação para aplicações reais que utilizam o framework Qt}
+\label{sec:realqt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Dado que o conjunto de casos de teste proposto possui como objetivo verificar propriedades específicas dos módulos pertencentes ao framework Qt também é necessário incluir resultados de verificações que envolvem aplicações reais. Os parágrafos seguintes descrevem as respectivas aplicações e os resultados associados.
+
+A aplicação chamada {\it Locomaps}~\cite{locomaps} é um exemplo de programa que utiliza o framework Qt que exibi imagens de satélite, terrenos, mapas de ruas, serviço de planejamento \textit{tiled map} e possui um integração com GPS Qt Geo. Utilizando o mesmo código fonte está aplicação pode ser compilada e executada nos principais sistemas operacionais existentes(Mac OS X, Linux e Windows). Está aplicação possui duas classes com 115 linhas de códigos utilizando Qt/C$++$ e usando cinco APIs diferentes do framework Qt( {\it QApplication}, {\it QCoreApplication}, {\it QDesktopWidget}, {\it QtDeclarative} e {\it QMainWindow}). Vale mencionar que o código escrito em Qt/C$++$ desta aplicação, as APIs e as bibliotecas utilizadas são considerados no processo de verificação, assim como, as propriedades relacionadas a eles. 
+
+ArcGIS~\cite{ArcGIS} para as forças armadas é um plataforma geográfica que é utilizada para criar, organizar e compartilhar materiais geográficos com usuário que utilizam mapas inteligentes online. A partir disso, GeoMessage Simulator~\cite{geomessage} possui como entrada de dados arquivos XML e cria em diferentes frequências datagramas utilizando o protocolo de datagramas por usuário(\textit{em ingles}, User Datagram Protocol(UDP)) para aplicações ArcGIS e componentes do sistema. {\it GeoMessage} também é uma aplicação multi-plataforma que contém $1209$ linhas de códigos em Qt/C++ que utiliza $20$ diferentes APIs do framework Qt englobando várias características, tais como o sistema de eventos de Qt, strings, manipulação de arquivos, widgets e assim por diante. Vale ressaltar que {\it GeoMessage} usa duas classes, {\it QMutex} e {\it QMutexLocker}, relacionadas ao módulo Qt Threading que possui classes para programas concorrentes. Tais classes foram utilizados na aplicação para travar ou destravar mutexes e o mais importante ESBMC$++$ é capaz de verificar adequadamente esses tipos de estruturas. No entanto, o modelo operacional proposto(QtOM) não fornece um suporte completo para o módulo Qt Threading ainda.
+
+ESBMC$++$ junto ao modelo operacional proposto(QtOM) foi aplicado para verificar as aplicações {\it Locomaps} e {\it GeoMessage} buscando verificar as seguintes propriedades: violação dos limites de um array, aritméticas de under- e overflow, divisão por zero, segurança de ponteiro e outras propriedades específicas do framework definicas em QtOM de acordo com cápitulo~\ref{chapter:smt-bmc}. Além disso, ESBMC$++$ foi capaz de identificar completamente o código-fonte de cada aplicação utilizando cinco diferentes módulos de QtOM para {\it Locomaps} e vinte módulos para {\it GeoMessage}, ou seja, cada módulo de QtOM usado correspondia a uma API utilizada pela aplicação que seria verificada. O processo de verificação de ambas as aplicações foi totalmente automático e a metodologia proposta levou aproximadamente $6.7$ segundos para gerar $32$ condições de verificação(\textit{em inglês}, Verification Conditional(VC)) para {\it Locomaps} e $16$ segundos para gerar $6421$ condições de verificação para {\it GeoMessage} em um comum computador de mesa. Além disso, ESBMC$++$ não relata caso haja qualquer falso negativo mas foi capaz de encontrar bugs semelhantes em ambas as aplicações, as quais foram confirmadas pelos desenvolvedores e são explicadas abaixo.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.35\textwidth}
+\begin{lstlisting}
+int main(int argc, char *argv[]) {
+  QApplication app(argc, argv);
+  return app.exec();
+}
+\end{lstlisting}
+\end{minipage}
+\caption{Fragmento de código do arquivo principal da aplicação {\it Locomaps}.}
+\label{fig:Fig6}
+\end{figure}
+
+A figura~\ref{fig:Fig6} mostra um fragmento de código retirado do principal arquivo da aplicação {\it Locomaps} que utiliza a classe {\it QApplication} que está presente no módulo {\it QtWidgets}. Nesse caso em particular, se o parâmetro $argv$ não for corretamente inicializado, logo o construtor ao ser chamado pelo objeto $app$ não é executado de forma correta acarretando em falhas na aplicação(veja a linha2, na figura~\ref{fig:Fig6}). A fim de verificar está propriedade, ESBMC$++$ analisa duas premissas em relação aos parâmetros de entrada da aplicação (veja as linhas $4$ e $5$, na figura~\ref{fig:Fig7}), avaliando-as como pré-condições. Um erro semelhante também foi encontrado na aplicação {\it GeoMessage} e uma maneira possível para corrigir  tal erro é sempre verificar, com instruções condicionais, se $argv$ e $argc$ são argumentos válidos antes de utilizalos em uma operação.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.50\textwidth}
+\begin{lstlisting}
+class QApplication {
+  ...
+  QApplication( int & argc, char ** argv ){
+  __ESBMC_assert(argc > 0, ``Invalid parameter'');
+  __ESBMC_assert(argv != NULL, ``Invalid pointer'');
+  this->str = argv;
+  this->_size = strlen(*argv);
+  ...
+ }
+ ...
+};
+\end{lstlisting}
+\end{minipage}
+\caption{Modelo operacional para o construstor de $QApplication$().}
+\label{fig:Fig7}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}

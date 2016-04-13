@@ -172,7 +172,7 @@ Em casos onde chaves com vários valores associados são permitidos, a comparação 
   & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := {i}_{pos} + 1.}\\
 \end{array}\]
 %
-Nota-se que tais modelos criados induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um iterator sobre o respectivo container subjacente, isto é, dado um container $c$ com os pointeiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito na seção~\ref{sec:smt-bmc}.
+Nota-se que tais modelos criados induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um iterator sobre o respectivo container subjacente, isto é, dado um container $c$ com os pointeiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito no capítulo~\ref{chapter:smt-bmc}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}
