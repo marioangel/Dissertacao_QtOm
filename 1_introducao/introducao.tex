@@ -20,7 +20,15 @@ Descrição
 \section{Objetivos}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{Deves descrever o objetivo geral e os específicos}.
+O objetivo geral deste trabalhar é aplicar as técnicas de verificação utilizando modelos operacionais para verificar aplicações que utilizam o framework Qt, usando ESBMC$++$(\textit{Efficient SMT-based bounded model checker}), LLBMC e DIVINE como ferramentas de verificação.
+
+Os objetivos específicos são listados a seguir:
+
+\begin{itemize}
+  \item Desenvolver uma implementação simplificada que oferece estritamente o mesmo comportamento do framework Qt com foco na verificação de suas propriedade.
+  \item Verificar o acesso de memória inválida, valores de tempo e período, o acesso a arquivos ausentes, ponteiros nulos, a manipulação de cadeia de caracteres(strings), uso de containers, entre outras propriedades das aplicações Qt.
+  \item Aplicar a metodologia de verificação propostas em aplicações reais que utilizam Qt.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contribuições}
