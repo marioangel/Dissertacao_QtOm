@@ -85,9 +85,10 @@ Do ponto de vista da verificação de software, existem métodos/funções que também
 \section{Pós-condições}
 \label{sec:postconditions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Em aplicações reais há métodos que não contêm apenas propriedades que serão manuseadas como pré-condição mas tambem serão considerados pós-condição~\cite{monteiro2015}. Por exemplo, de acorodo com a documentação do Qt~\cite{Qt15}, a função $setFileName$ conforme descrita na seção\ref{sec:preconditions} não dever ser utilizada se o respectivo arquivo já estiver sendo utilizado, o que é verificado em seu código fonte a partir da estrutura $if$ presente nas linhas $3$ e $4$ visto na figura \ref{fig:Fig3}.
 
-No entanto, a instrução executada na linha $4$ (veja Fig.~\ref{fig:Fig3}) seria não determinística para o ESBMC$++$, assim como, a premissa presente na linha $8$ do modelo operacional associado como mostrado na figura~\ref{fig:Fig4}, uma vez que não há como se afirma se o respectivo arquivo está sendo utilizado ou não. Desta forma, é evidente que será necessário simulador o comportamento do método $isOpen$() com o intuito de verificar de forma coerente as propriedades relacionadas com a manipulação de arquivos. Como a classe QFile indiretamente herda os métodos $open$() e $isOpen$(), a partir da classe QIODevice, para simulações comportamentais desses métodos construi-se um modelo operacional para QIODevice como mostrado na figura~\ref{fig:Fig5}.
+Em aplicações reais existem métodos que não contêm apenas propriedades que serão tratadas como pré-condição, mas tambem serão considerados pós-condição~\cite{monteiro2015} \textcolor{red}{Incluir mais uma referência sobre pré- e pós-condição}. Por exemplo, de acorodo com a documentação do Qt~\cite{Qt15}, a função $setFileName$ conforme descrita na Seção~\ref{sec:preconditions} não dever ser utilizada se o respectivo arquivo já estiver sendo utilizado, o que é verificado em seu código fonte a partir da estrutura $if$ presente nas linhas $3$ e $4$ visto na Figura~\ref{fig:Fig3}.
+
+No entanto, a instrução executada na linha $4$ (veja Fig.~\ref{fig:Fig3}) seria não determinística para o ESBMC$++$, assim como, a premissa presente na linha $8$ do modelo operacional associado, como mostrado na Figura~\ref{fig:Fig4}, uma vez que não há como se afirma se o respectivo arquivo está sendo utilizado ou não. Desta forma, é evidente que será necessário simular o comportamento do método $isOpen$() com o intuito de verificar de forma coerente as propriedades relacionadas com a manipulação de arquivos. Como a classe \textit{QFile} indiretamente herda os métodos $open$() e $isOpen$(), a partir da classe \textit{QIODevice}, para simulações comportamentais desses métodos constrói-se um modelo operacional para \textit{QIODevice} conforme mostrado na Figura~\ref{fig:Fig5}.
 
 \begin{figure}[htb]
 \centering
@@ -113,11 +114,11 @@ private:
 };
 \end{lstlisting}
 \end{minipage}
-\caption{Modelo operacional para os métodos $open$() e $isOpen$() na classe QIODevice.}
+\caption{Modelo operacional para os métodos $open$() e $isOpen$() na classe \textit{QIODevice}.}
 \label{fig:Fig5}
 \end{figure}
 
-Por fim, todos os métodos que resultam em uma condição que dever ser mantida a fim de permitir uma adequada execução de futuras instruções, deve apresentar uma simulação do seu comportamento. Consequentemente, um determinado modelo operacional deve seguir de forma rigorosa as especificações descritas na documentação oficial do framework~\cite{Qt15} com o objetivo de se obter o mesmo comportamento, assim como, incluir mecanismos necessários à verificação do código. Como resultado, é necessário verificar o nível de equivalência entre o modelo operacional e a biblioteca original, com o intuito de se comparar o comportamento de ambos, tendo em vista que os modelos operacionais são uma cópia simplificada das bibliotecas originais como todos os mecanismos necessários para a verificação do código.
+Por fim, todos os métodos que resultam em uma condição que deve ser mantida a fim de permitir uma adequada execução de futuras instruções, deve apresentar uma simulação do seu comportamento. Consequentemente, um determinado modelo operacional deve seguir de forma rigorosa as especificações descritas na documentação oficial do \textit{framework}~\cite{Qt15} com o objetivo de se obter o mesmo comportamento, assim como, incluir mecanismos necessários à verificação do código. Como resultado, é necessário verificar o nível de equivalência entre o modelo operacional e a biblioteca original, com o intuito de se comparar o comportamento de ambos, tendo em vista que os modelos operacionais são uma cópia simplificada das bibliotecas originais com todos os mecanismos necessários para a verificação do código \textcolor{red}{Podes citar esse artigo: Pereira, P. A., Albuquerque, H., Marques, H., Silva, I., Carvalho, C. B., Santos, V., Ferreira, R. S., Cordeiro, L. C. Verifying CUDA Programs using SMT-Based Context-Bounded Model Checking. In ACM Symposium on Applied Computing (SAC), Software Verification and Testing, pp. 1648-1653, 2016.}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
