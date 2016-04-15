@@ -86,9 +86,9 @@ Com relação aos \textit{containers} sequenciais, os métodos $\mathit{C.insert(\m
 \label{sec:associative}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-O grupo dos containers associativos possuem cinco classes: QMap, QMultimap, QHash, QMultiHash e QSet. QMap tem como abordagem um array associativo que conecta cada umas das chaves, de um certo tipo $K$, para um valor de um certo tipo $V$, onde as chaves associadas são armazenadas em ordem. Por um lado, QHash apresenta um comportamento ao de QMap, contudo, os dados são armazenados numa ordem arbitrária. QMultiMap e QMultihash representam respectivamente subclasses de QMap e QHash, ainda assim, ambas classes especificam interfacer aonde uma chave pode ser associada a diversos valores. Por fim, um valor único a partir de um conjunto matemático é a abordagem definida por QSet.
+O grupo dos \textit{containers} associativos possui cinco classes: \textit{QMap}, \textit{QMultimap}, \textit{QHash}, \textit{QMultiHash} e \textit{QSet}. \textit{QMap} tem como abordagem um vetor associativo que conecta cada umas das chaves, de um certo tipo $K$, a um valor de um certo tipo $V$, onde as chaves associadas são armazenadas em ordem. Por um lado, \textit{QHash} apresenta um comportamento similar ao \textit{QMap}, contudo os dados armazenados possuem uma ordem arbitrária. \textit{QMultiMap} e \textit{QMultihash} representam respectivamente subclasses de \textit{QMap} e \textit{QHash}, no entanto, ambas classes permitem o armazenamento de valores replicados. Por fim, \textit{QSet} armazena objetos que estão associados a um conjunto de valores ordenados.
 
-Com o intuito de implementar containers associativos, um ponteiro $c_v$ é definido para os valores armazenados no container a ser desenvolvido e um ponteiro $c_{size}$ também é usado para guardar o tamanho do container. No entanto, um ponteiro $c_k$ é utilizado para a chave do container. Em particular, $c_k$ e $c_v$ estão conectados através de um índice, ou seja, dado um container $c$ que contém uma chave $k$ e um valor $v$ assume-se que
+Com o intuito de implementar \textit{containers} associativos, um ponteiro $c_v$ é definido para os valores armazenados, um ponteiro $c_k$ é utilizado para armazenar as chaves do respectivo \textit{container} e uma variável $c_{size}$ é utilizada para guardar a quantidade de elementos inseridos. Em particular, $c_k$ e $c_v$ estão conectados através de um índice, ou seja, dado um container $c$ que contém uma chave $k$ e um valor $v$ assume-se que
 
 \[\begin{array}{r@{\:\:}c@{\:\:}l}
 \left[\forall \omega \in \mathbb{N} | 0 \leq \omega < c_{size}\right]
@@ -96,14 +96,15 @@ Com o intuito de implementar containers associativos, um ponteiro $c_v$ é defini
 \]
 
 \noindent e
+
 \[\begin{array}{r@{\:\:}c@{\:\:}l}
 k \rightarrow v \iff select\left(c_k,\omega\right) = k \wedge select\left(c_v,\omega\right) = v,
 \end{array}
 \]
 
-\noindent aonde $(k \rightarrow v)$ indica que uma chave $k$ é associada a um valor $v$ and $\omega$ representa uma posição válida em $c_k$ e $c_v$.Além disso, a função \emph{select(a, i)} indica o valor de $a$ em um índice $i$~\cite{ECBS13}. Novamente, todas as operações dessas bibliotecas podem ser expressadas a partir de uma variação simplificada dos três principais como citado na seção~\ref{sec:sequential}.
+\noindent onde $(k \rightarrow v)$ indica que uma chave $k$ é associada a um valor $v$ and $\omega$ representa uma posição válida em $c_k$ e $c_v$.Além disso, a função \emph{select(a, i)} indica o valor de $a$ em um índice $i$~\cite{ECBS13}. Novamente, todas as operações dessas bibliotecas podem ser expressadas a partir de uma variação simplificada das três principais operações citadas na seção~\ref{sec:sequential}.
 
-Portanto, a operação de inserção para containers associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no container $c$, o valor $v$ associado com a chave $k$, porém, se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um iterator que aponta para o elemento inserido ou modificado. Deste modo,
+Portanto, a operação de inserção para \textit{containers} associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo elemento é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no \textit{container} $c$, o valor $v$ associado com a chave $k$, porém, se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um \textit{iterator} que aponta para o elemento inserido ou modificado. Deste modo,
 %
 \[\begin{array}{lll}
 \multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
@@ -135,7 +136,9 @@ Portanto, a operação de inserção para containers associativos pode ser realizada
   & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v.}\\
 \end{array}\]
 %
+
 Em uma outra versão do método de inserção onde a ordem das chaves possuem importância. Desta forma, todas as variáveis acima referidas são considerados e uma comparação é realizada, a fim de assegurar que o novo elemento é inserido da ordem desejada. Assim,
+
 %
 \[\begin{array}{lll}
 \multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
@@ -156,7 +159,9 @@ Em uma outra versão do método de inserção onde a ordem das chaves possuem import
   & \multicolumn{2}{l}{\wedge\:{i'}_v := {c'}_v.}\\
 \end{array}\]
 %
-Em casos onde chaves com vários valores associados são permitidos, a comparação feita para verificar se o elemento já existe com uma respectiva chave é ignorada. Por fim, com o propósito de realizar uma exclusão o método apagar(\textit{em inglês}, erase) é criado, o qual é respresentado por $erase$($i$) onde $i$ é um iterator que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
+
+Em casos onde chaves com vários valores associados são permitidos, a comparação feita para verificar se o elemento já existe com uma respectiva chave é ignorada. Por fim, com o propósito de realizar uma exclusão, o método apagar (\textit{em inglês}, erase) é criado, o qual é representado por $erase$($i$) onde $i$ é um \textit{iterator} que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
+
 %
 \[\begin{array}{lll}
 \multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.erase}(i)):=}\\
@@ -172,13 +177,14 @@ Em casos onde chaves com vários valores associados são permitidos, a comparação 
   & \multicolumn{2}{l}{\wedge\:{i'}_{pos} := {i}_{pos} + 1.}\\
 \end{array}\]
 %
-Nota-se que tais modelos criados induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um iterator sobre o respectivo container subjacente, isto é, dado um container $c$ com os pointeiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito no capítulo~\ref{chapter:smt-bmc}.
+
+Nota-se que tais modelos induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações \textcolor{red}{quais propriedades são essas?}. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um \textit{iterator} sobre o respectivo \textit{container} subjacente, isto é, dado um \textit{container} $c$ com os ponteiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito na seção~\ref{chapter:smt-bmc}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Resumo
+\textcolor{red}{Faltando.}
 
 
 %Chama outro arquivo%
