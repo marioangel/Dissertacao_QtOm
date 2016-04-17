@@ -18,7 +18,7 @@ Document=dissertacao.tex
 
 [Frame0_View0,0]
 TopLine=0
-Cursor=20
+Cursor=0
 
 [Frame1]
 Flags=0
@@ -54,7 +54,7 @@ Document=0_capa\resumo.tex
 
 [Frame2_View0,0]
 TopLine=0
-Cursor=559
+Cursor=81
 
 [Frame3]
 Flags=0
@@ -89,7 +89,7 @@ Class=LaTeXView
 Document=3_trabalhos\trabalhos.tex
 
 [Frame4_View0,0]
-TopLine=157
+TopLine=155
 Cursor=11123
 
 [Frame5]
@@ -108,7 +108,7 @@ Document=apendice\publicacoes.tex
 
 [Frame5_View0,0]
 TopLine=0
-Cursor=283
+Cursor=0
 
 [Frame6]
 Flags=0
@@ -146,7 +146,25 @@ Document=1_introducao\introducao.tex
 TopLine=0
 Cursor=148
 
+[Frame8]
+Flags=0
+ShowCmd=1
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-1
+MaxPos.y=-1
+NormalPos.left=4
+NormalPos.top=26
+NormalPos.right=1366
+NormalPos.bottom=533
+Class=LaTeXView
+Document=4_cpp\cpp.tex
+
+[Frame8_View0,0]
+TopLine=238
+Cursor=18935
+
 [SessionInfo]
-FrameCount=8
-ActiveFrame=7
+FrameCount=9
+ActiveFrame=8
 
