@@ -89,7 +89,7 @@ Class=LaTeXView
 Document=3_trabalhos\trabalhos.tex
 
 [Frame4_View0,0]
-TopLine=155
+TopLine=157
 Cursor=11123
 
 [Frame5]
@@ -125,8 +125,8 @@ Class=LaTeXView
 Document=6_conclusoes\conclusoes.tex
 
 [Frame6_View0,0]
-TopLine=0
-Cursor=48
+TopLine=17
+Cursor=3156
 
 [Frame7]
 Flags=0
@@ -161,10 +161,10 @@ Class=LaTeXView
 Document=4_cpp\cpp.tex
 
 [Frame8_View0,0]
-TopLine=238
+TopLine=240
 Cursor=18935
 
 [SessionInfo]
 FrameCount=9
-ActiveFrame=8
+ActiveFrame=6
 
