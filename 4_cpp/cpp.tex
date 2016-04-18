@@ -3,14 +3,14 @@
 \label{chapter:container-model}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-O módulo \textit{Qt Core} possui um subconjunto de classes denominado \textit{Qt Container}~\cite{Qt15} como alternativa para os \textit{containers} da \textit{Standard Template Library} (STL) disponíveis na linguagem C++~\textcolor{red}{Adicionar uma referência para STL aqui}. Por exemplo, durante o desenvolvimento de uma determinada aplicação, é necessário a criação de uma pilha de tamanho variável para o armazenamento de objetos do tipo \textit{QWidgets}, neste caso, uma alternativa seria o uso da classe \textit{QStack} que implementa um \textit{container} com a política LIFO (do inglês, \textit{last-in, first-out}) (\textit{e.g.}, \textit{QStack}$<$\textit{QWidget}$>$). Além disso, tais \textit{containers} também fazem uso de estruturas denominadas \textit{iterators} no estilo Java/STL, de modo a se deslocar ao longo dos dados armazenados no \textit{container} criado.  
+O módulo \textit{Qt Core} possui um subconjunto de classes denominado \textit{Qt Container}~\cite{Qt15} como alternativa para os \textit{containers} da \textit{Standard Template Library} (STL) disponíveis na linguagem C++~\cite{Iso2003}. Por exemplo, durante o desenvolvimento de uma determinada aplicação, é necessário a criação de uma pilha de tamanho variável para o armazenamento de objetos do tipo \textit{QWidgets}, neste caso, uma alternativa seria o uso da classe \textit{QStack} que implementa um \textit{container} com a política LIFO (do inglês, \textit{last-in, first-out}) (\textit{e.g.}, \textit{QStack}$<$\textit{QWidget}$>$). Além disso, tais \textit{containers} também fazem uso de estruturas denominadas \textit{iterators} no estilo Java/STL, de modo a se deslocar ao longo dos dados armazenados no \textit{container} criado.  
 
 Desta forma, esse subconjunto de classes pode ser classificado em dois subgrupos: sequenciais e associativos, dependendo da estrutura de armazenamento implementada. Neste contexto, as classes \textit{QList}, \textit{QLinkedList}, \textit{QVector}, \textit{QStack} e \textit{QQueue} são classificadas como \textit{containers} sequenciais, enquanto as classes \textit{QMap}, \textit{QMultiMap}, \textit{QHash}, \textit{QMultiHash} e \textit{QSet} são classificadas como \textit{containers} associativos.
 
 Por fim, uma linguagem base é proposta na Seção~\ref{sec:language} com o objetivo de formalizar a implementação de cada \textit{container} e, em seguida, as Seções~\ref{sec:sequential} e~\ref{sec:associative} descrevem as implementações formais para os \textit{containers} sequenciais e associativos, respectivamente.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Linguagem}
+\section{Linguagem Base}
 \label{sec:language}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -48,9 +48,9 @@ Com o intuito de implementar o modelo operacional para as classes que compõe o \
   \label{ccl-fig}
 \end{figure}
 
-De acordo com a figura acima, os elementos básicos estão divididos em dois domínios sintáticos: $\mathit{V}$ para valores e $\mathit{K}$ para as chaves. No entanto, os demais domínios, $\mathit{I}$, $\mathit{P}$, $\mathbb{N}$ e $\mathit{C}$ são mantidos por \textit{iterators}, ponteiros, índices inteiros e expressões \textit{container} adequadas, respectivamente. Assim, as variáveis $\mathit{k}$ do tipo $\mathit{K}$ e $\mathit{v}$ do tipo $\mathit{V}$ são adicionadas. Dessa forma, a notação $\mathit{I_v}$ representa um valor armazenado em um \textit{container} em uma posição direcionada pelo \textit{iterator} $\mathit{I}$ e $\mathit{I_k}$ representa uma chave armazenada em um \textit{container} em uma posição direcionada também pelo \textit{iterator} $\mathit{I}$. Tais notações são abreviações para $\mathit{store(i,I_{pos},I_v)}$ e $\mathit{store(i,I_{pos},I_k)}$, respectivamente, onde a expressão $\mathit{store}(t, f, v)$ indica \testit{container} $t$ que no campo $f$ possui um valor $v$. Da forma similar, $\mathit{P_k}$ e $\mathit{P_v}$ representam ponteiros para a chave e valor, respectivamente.
+De acordo com a figura acima, os elementos básicos estão divididos em dois domínios sintáticos: $\mathit{V}$ para valores e $\mathit{K}$ para as chaves. No entanto, os demais domínios, $\mathit{I}$, $\mathit{P}$, $\mathbb{N}$ e $\mathit{C}$ são mantidos por \textit{iterators}, ponteiros, índices inteiros e expressões \textit{container} adequadas, respectivamente. Assim, as variáveis $\mathit{k}$ do tipo $\mathit{K}$ e $\mathit{v}$ do tipo $\mathit{V}$ são adicionadas. Dessa forma, a notação $\mathit{I_v}$ representa um valor armazenado em um \textit{container} em uma posição direcionada pelo \textit{iterator} $\mathit{I}$ e $\mathit{I_k}$ representa uma chave armazenada em um \textit{container} em uma posição direcionada também pelo \textit{iterator} $\mathit{I}$. Tais notações são abreviações para $\mathit{store(i,I_{pos},I_v)}$ e $\mathit{store(i,I_{pos},I_k)}$, respectivamente, onde a expressão $\mathit{store}(t, f, v)$ indica \textit{container} $t$ que no campo $f$ possui um valor $v$. Da forma similar, $\mathit{P_k}$ e $\mathit{P_v}$ representam ponteiros para a chave e valor, respectivamente.
 
-Além disso, três outros métodos foram incluídos com o objetivo de descrever as operações realizadas em cada \textit{container}. O método $\mathit{C.insert(k, v)}$ insere um valor $\mathit{v}$ no \textit{container} $C$ com uma chave correspondente $\mathit{k}$ e possui como retorno um \testit{iterator} que aponta para o novo elemento inserido. O método $\mathit{C.search(k)}$ retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com uma chave $\mathit{k}$ correspondente. De modo semelhante, $\mathit{C.search(v)}$ também retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com um valor $\mathit{v}$ correspondente. No entanto, caso não exista nenhuma chave ou valor correspondente durante a operação com tais métodos, os mesmos retornarão $\mathit{C.end()}$, o qual corresponde ao \textit{iterator} que aponta para a posição imediatamente posterior ao último elemento. Por fim, $\mathit{C_k}$ é um endereço de memória que armazena o início das chaves dos \textit{containers}, assim como, $\mathit{C_v}$ é usado para armazenar os valores dos \textit{containers}.
+Além disso, três outros métodos foram incluídos com o objetivo de descrever as operações realizadas em cada \textit{container}. O método $\mathit{C.insert(k, v)}$ insere um valor $\mathit{v}$ no \textit{container} $C$ com uma chave correspondente $\mathit{k}$ e possui como retorno um \textit{iterator} que aponta para o novo elemento inserido. O método $\mathit{C.search(k)}$ retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com uma chave $\mathit{k}$ correspondente. De modo semelhante, $\mathit{C.search(v)}$ também retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com um valor $\mathit{v}$ correspondente. No entanto, caso não exista nenhuma chave ou valor correspondente durante a operação com tais métodos, os mesmos retornarão $\mathit{C.end()}$, o qual corresponde ao \textit{iterator} que aponta para a posição imediatamente posterior ao último elemento. Por fim, $\mathit{C_k}$ é um endereço de memória que armazena o início das chaves dos \textit{containers}, assim como, $\mathit{C_v}$ é usado para armazenar os valores dos \textit{containers}.
 
 É importante ressaltar que, todas demais operações provenientes da linguagem base mencionada são utilizadas aqui de acordo como descrito por Ramalho \textit{et al.}~\cite{ECBS13}.
 
@@ -59,7 +59,7 @@ Além disso, três outros métodos foram incluídos com o objetivo de descrever as o
 \label{sec:sequential}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textit{Containers} sequenciais tem como objetivo armazenar elementos em uma determinada ordem~\cite{Deitel}. De acordo com a documentação do Qt \textcolor{red}{citar documentação aqui}, \textit{QList} é a classe \textit{container} mais utilizada e possui uma estrutura em formato de lista encadeada. Da mesma forma, \textit{QLinkedList} também possui um estrutura em forma de lista, embora seja acessada através de \textit{iterators} ao invés de índices inteiros. Na classe \textit{QVector}, há presente uma estrutura de \textit{array} expansível e, por fim, \textit{QStack} e \textit{QQueue} fornecem estruturas que implementam diretivas como LIFO e FIFO (em inglês, \textit{first-in, first-out}), respectivamente.
+\textit{Containers} sequenciais tem como objetivo armazenar elementos em uma determinada ordem~\cite{Deitel}. De acordo com a documentação do Qt~\cite{Qt15}, \textit{QList} é a classe \textit{container} mais utilizada e possui uma estrutura em formato de lista encadeada. Da mesma forma, \textit{QLinkedList} também possui um estrutura em forma de lista, embora seja acessada através de \textit{iterators} ao invés de índices inteiros. Na classe \textit{QVector}, há presente uma estrutura de \textit{array} expansível e, por fim, \textit{QStack} e \textit{QQueue} fornecem estruturas que implementam diretivas como LIFO e FIFO (em inglês, \textit{first-in, first-out}), respectivamente.
 
 Para simular adequadamente os \textit{containers} sequenciais, os modelos propostos se utilizam da linguagem base descrita na seção~\ref{sec:language}. Os \textit{containers} sequenciais são implementados a partir de um ponteiro $\mathit{C_v}$ para os valores do \textit{container} e também com um $\mathit{C_{size}}$, o qual é utilizado para representar o tamanho do respectivo \textit{container} (onde $\mathit{C_{size}} \in \mathbb{N}$). Dessa forma, os \textit{iterators} são modelados por meio de duas variáveis, uma do tipo $\mathbb{N}$ que é denominada de $\mathit{i_{pos}}$ e contém o valor do índice apontado por um \textit{iterator} e outra do tipo $P$ que é chamado por $\mathit{I_v}$ e aponta para um \textit{container} subjacente.
 
@@ -103,7 +103,7 @@ k \rightarrow v \iff select\left(c_k,\omega\right) = k \wedge select\left(c_v,\o
 
 \noindent onde $(k \rightarrow v)$ indica que uma chave $k$ é associada a um valor $v$ and $\omega$ representa uma posição válida em $c_k$ e $c_v$. Além disso, a função \emph{select(a, i)} indica o valor de $a$ em um índice $i$~\cite{ECBS13}. Novamente, todas as operações dessas bibliotecas podem ser expressadas a partir de uma variação simplificada das três principais operações citadas na Seção~\ref{sec:sequential}.
 
-Portanto, a operação de inserção para \textit{containers} associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo elemento é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no \textit{container} $c$, o valor $v$ associado com a chave $k$; porém, se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um \textit{iterator} que aponta para o elemento inserido ou modificado. Deste modo,
+Portanto, a operação de inserção para \textit{containers} associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo elemento é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no \textit{container} $c$ com um o valor $v$ e associado a uma chave $k$, porém se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um \textit{iterator} que aponta para o elemento inserido ou modificado. Deste modo,
 %
 \[\begin{array}{lll}
 \multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
@@ -136,7 +136,7 @@ Portanto, a operação de inserção para \textit{containers} associativos pode ser 
 \end{array}\]
 %
 
-\textcolor{red}{Esta frase está sem concordância:} Em uma outra versão do método de inserção onde a ordem das chaves possuem importância. Desta forma, todas as variáveis acima referidas são considerados e uma comparação é realizada, a fim de assegurar que o novo elemento é inserido da ordem desejada. Assim,
+Em uma outra versão do método de inserção onde a ordem das chaves possuem importância. Todas as variáveis citadas acima são consideradas e uma comparação é realizada, a fim de assegurar que o novo elemento é inserido na ordem desejada. Assim,
 
 %
 \[\begin{array}{lll}
@@ -159,7 +159,7 @@ Portanto, a operação de inserção para \textit{containers} associativos pode ser 
 \end{array}\]
 %
 
-Em casos onde chaves com vários valores associados são permitidos, a comparação feita para verificar se o elemento já existe com uma respectiva chave é ignorada. Por fim, com o propósito de realizar uma exclusão, o método apagar, o qual é representado por $erase$($i$) onde $i$ é um \textit{iterator} que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
+Em casos onde chaves com vários valores associados são permitidos, a comparação feita será ignorada, caso seja verificado que já existe um elemento associado a respectiva chave analisada. Por fim, com o propósito de realizar uma exclusão, o método apagar, o qual é representado por $erase$($i$) onde $i$ é um \textit{iterator} que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
 %
 \[\begin{array}{lll}
 \multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.erase}(i)):=}\\
@@ -176,13 +176,13 @@ Em casos onde chaves com vários valores associados são permitidos, a comparação 
 \end{array}\]
 %
 
-Nota-se que tais modelos induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações \textcolor{red}{quais propriedades são essas?}. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um \textit{iterator} sobre o respectivo \textit{container} subjacente, isto é, dado um \textit{container} $c$ com os ponteiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito na Seção~\ref{chapter:smt-bmc}.
+Nota-se que tais modelos induzem implicitamente duas principais propriedades com o objetivo de executar de forma correta as respectivas operações \textcolor{red}{quais propriedades são essas?}. A princípio $c_k$ e $c_v$ são considerados não vazios, ou seja, $c_{size}$ também não é nulo para as operações de busca e exclusão de elementos. Por outro lado, $i$ é considerado como um \textit{iterator} sobre o respectivo \textit{container} subjacente, isto é, dado um \textit{container} $c$ com os ponteiros bases $c_k$ e $c_v$, $i_k = c_k$ e $i_v = c_v$ são mantidos. Na verdade, estas e outras propriedades específicas são tratadas em seus respectivos modelos operacionais conforme descrito no capítulo~\ref{chapter:smt-bmc}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{Faltando.}
+Neste capítulo, foi descrito o subjconjunto denominado \textit{Qt Container} que se faz presente no módulo \textit{Qt Core} do \textit{framework} multiplataforma Qt, sendo em classificado em dois subgrupos: sequenciais e associativos, dependendo da estrutura de armazenamento implementada, logo em seguida, é descrito a linguaguem base formalizada por Ramalho \textit{et al.}~\cite{ECBS13} mas adaptada com o objetivo de formular adequadamente a verificação de ambos tipos de \textit{containers} existentes. Por fim, os \textit{containers} sequenciais e associativos foram descritos de forma detalhada, a fim de ressaltar todos os metódos que constituem essas bibliotecas, assim como, a forma que estão implementados a partir da transformação SSA realizada.
 
 
 %Chama outro arquivo%
