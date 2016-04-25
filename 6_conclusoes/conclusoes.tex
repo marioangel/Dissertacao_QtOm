@@ -3,52 +3,61 @@
 \label{chapter:conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A abordagem proposta neste trabalho tem como objetivo verificar programas que utilizam o \textit{framework} Qt e foram desenvolvidos em C$++$/Qt, usando um modelo operacional denominado de QtOM que se utiliza de pré e pós-condições, simulação de características (por exemplo, como os elementos que possuem valores são manipulados e armazenados) e também da forma como são utilizados em dispositivos de eletrônica de consumo. A forma como o modelo operacional proposto foi implementado também foi descrita, levando-se em consideração que é usado para verificar \textit{containers} de tipos sequenciais e associativos. Além disso, uma aplicação \textit{touchscreen} baseada em Qt que utiliza mapas de navegação, imagens de satélite e dados de terrenos~\cite{locomaps} e outra que gera \textit{datagramas broadcast} UDP com base em arquivos XML~\cite{geomessage} foram verificadas usando o ESBMC$++$ com QtOM. Desta forma, foi mostrado o potencial da abordagem proposta para a verificação de aplicações reais baseadas no \textit{framework} Qt. 
+A abordagem proposta neste trabalho tem como objetivo verificar programas que utilizam o \textit{framework} multiplataforma Qt desenvolvido em Qt/C$++$, usando um modelo operacional denominado de QtOM que se utiliza de pré e pós-condições, simulação de características (por exemplo, como os elementos que possuem valores são manipulados e armazenados) e também da forma como são utilizados em dispositivos de eletrônica de consumo. A forma como o modelo operacional proposto foi implementado, foi também descrita, levando-se em consideração que é usado para verificar \textit{containers} de tipos sequenciais e associativos. Além disso, uma aplicação \textit{touchscreen} baseada em Qt que utiliza mapas de navegação, imagens de satélite e dados de terrenos~\cite{locomaps} e outra que gera \textit{datagramas broadcast} UDP com base em arquivos XML~\cite{geomessage} foram verificadas usando o ESBMC$++$ com o QtOM. Desta forma, foi mostrado o potencial da abordagem proposta para a verificação de aplicações reais baseadas no \textit{framework} Qt. 
 
-Este trabalho possui como contribuição principal a construção de um modelo operacional denominado QtOM que oferece suporte à \textit{containers} sequenciais e associativos que utilizam o \textit{framework} Qt. Os experimentos que foram realizados envolvem programas em Qt/C$++$ com muitas características oferecidas pelas classes \textit{container} do \textit{framework} Qt. 
+Este trabalho possui como contribuição principal a construção de um modelo operacional denominado QtOM que oferece suporte à \textit{containers} sequenciais e associativos que utilizam o \textit{framework} multiplataforma Qt. Os experimentos que foram realizados envolvem programas em Qt/C$++$ com muitas características oferecidas pelas classes \textit{container} do \textit{framework} multiplataforma Qt. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Na verdade, os resultados das  verificações realizadas demonstram a eficiência e a eficácia da abordagem BMC baseada em SMT proposta com ESBMC$++$ a cerca da verificação de programas que utilizam o framework Qt também é apresentado um conjunto de teste com uma taxa de sucesso de $89,3$\% com um tempo de $1760$ segundos de verificação.
 
-Além disso, também foram avaliados o desempenho dos solucionadores Z3, Boolector e Yices, dado que eles foram utilizados no processo de verificação dos programas que utilizam o \textit{framework} Qt com ESBMC$++$ e o modelo operacional proposto (QtOM). Como resultado, o Boolector apresentou a maior taxa de cobertura dos programas verificados e com um menor tempo de verificação.
+Além disso, também foram avaliados o desempenho dos solucionadores Z3, Boolector e Yices, dado que eles foram utilizados no processo de verificação dos programas que utilizam o \textit{framework} multiplataforma Qt com ESBMC$++$ e o modelo operacional proposto (QtOM). Como resultado, o Boolector apresentou a maior taxa de cobertura dos programas verificados com um menor tempo de verificação e o ESBMC$++$ apresentou uma taxa de sucesso de $89,3$\% para o conjunto de teste utilizado com um tempo de $1760$ segundos de verificação.
 
-Outra fundamental contribuição é a integração de QtOM dentro do processo de verificação de outro dois diferentes verificadores de modelo conhecidos como LLBMC e DIVINE, demonstrando a flexibilidade do QtOM. Esse tipo de alternativa também demonstra resultados importantes, uma vez que LLBMC detectou $95$\% dos erros existentes com um tempo de verificação de $2513$ segundos e DIVINE encontrou $92$\% dos erros existentes com um tempo de verificação em torno de $1760$ segundos. Contudo, o LLBMC possui a maior taxa de resultados incorretos entre as ferramentas utilizadas com $18,6$\%, seguido de DIVINE com $11,3$\% e por fim ESBMC$++$ com $10,9$\%. Vale ressaltar que o DIVINE é $7$ vezes mais lento do que as demais ferramentas utilizadas, seguido pelo LLBMC e ESBMC$++$, respectivamente. Em resumo, o QtOM pode ser integrado em uma ferramenta de verificação adequada e utilizado para verificar programas reias que estão escritos em C$++$/Qt para cenários específicos e aplicações.
+Outra fundamental contribuição é a integração de QtOM dentro do processo de verificação de outro dois diferentes verificadores de modelo conhecidos como LLBMC e DIVINE, demonstrando a flexibilidade do QtOM. Esse tipo de alternativa também demonstra resultados importantes, uma vez que LLBMC detectou $95$\% dos erros existentes com um tempo de verificação de $2513$ segundos e o DIVINE encontrou $92$\% dos erros existentes com um tempo de verificação em torno de $1760$ segundos. Contudo, o LLBMC possui a maior taxa de resultados incorretos entre as ferramentas utilizadas com $18,6$\%, seguido de DIVINE com $11,3$\% e por fim ESBMC$++$ com $10,9$\%. Vale ressaltar que o DIVINE é $7$ vezes mais lento do que as demais ferramentas utilizadas, seguido pelo LLBMC e ESBMC$++$, respectivamente. Em resumo, o QtOM pode ser integrado em uma ferramenta de verificação adequada e utilizado para verificar programas reias que estão escritos em C$++$/Qt para cenários específicos e aplicações.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Trabalhos Futuros}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Como trabalhos futuros, o modelo operacional proposto (QtOM) será estendido com o objetivo de oferecer suporte à verificação de programas multi-tarefas que utilizam o \textit{framework} multiplataforma Qt. Além disso, mais classes e biblitecas serão adicionadas com o intuito de aumentar a cobertura da verificação em relação ao \textit{framework} multiplataforma Qt e dessa forma validar suas respecitvas propriedades. Por fim ferramentas para medição de desempenho do modelo operacional proposto serão incluidas, a fim de verificar se rotinas específicas estão de acordo com as limitações de tempo. Por fim, será investigada a verificação por indução matemática no ESBMC$^{QtOM}$ para provar a corretude de programas Qt \textcolor{red}{Citar o artigo Gadelha, M. Y. R., Ismail, H. I., Cordeiro, L. C. Handling Loops in Bounded Model Checking of C Programs via k-Induction. To appear in International Journal on Software Tools for Technology Transfer, 2015. } \textcolor{red}{Rocha, H., Ismail, H. I., Cordeiro, L. C., Barreto, R. S. Model Checking Embedded C Software using k-Induction and Invariants. In V Brazilian Symposium on Computing Systems Engineering (SBESC), pp. 90-95, 2015.}
+Como trabalhos futuros, o modelo operacional proposto (QtOM) será estendido com o objetivo de oferecer suporte à verificação de programas multi-tarefas que utilizam o \textit{framework} multiplataforma Qt. Além disso, mais classes e bibliotecas serão adicionadas com o intuito de aumentar a cobertura da verificação em relação ao \textit{framework} multiplataforma Qt e dessa forma validar suas respectivas propriedades. Por fim ferramentas para medição de desempenho do modelo operacional proposto e testes de conformidade serão incluídos, a fim de verificar se rotinas específicas estão de acordo com as limitações de tempo. Por fim, será investigada a verificação por indução matemática no ESBMC$^{QtOM}$ para provar a corretude de programas Qt~\cite{Gadelha2015,RochaICB15}.
 
+\newpage
 
-
-\begin{table}[!htpb]
-\centering
-
-% definindo o tamanho da fonte para small
-% outros possÃ­veis tamanhos: footnotesize, scriptsize
-\begin{small} 
-  
-% redefinindo o espaÃ§amento das colunas
-\setlength{\tabcolsep}{3pt} 
-
-% \cline Ã© semelhante ao \hline, porÃ©m Ã© possÃ­vel indicar as colunas que terÃ£o essa a linha horizontal
-% \multicolumn{10}{c|}{Meses} indica que dez colunas serÃ£o mescladas e a palavra Meses estarÃ¡ centralizada dentro delas.
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}\hline
- & \multicolumn{6}{c|}{Meses}\\ \cline{2-25}
-\raisebox{1.5ex}{Etapas} & 04 & 05 & 06 & 07 & 08 & 09 \\ \hline
-
-Suporte a programas multi-tarefas & X & X & & & &  \\ \hline
-Testes de conformidade & & & X & X & &  \\ \hline
-3 & & & & & &  \\ \hline
-4 & & & & & &  \\ \hline
-5 & & & & & &  \\ \hline
-6 & & & & & &  \\ \hline
-7 & & & & & &  \\ \hline
-8 & & & & & &  \\ \hline
-
-\end{tabular} 
-\end{small}
-\caption{Cronograma das atividades previstas}
-\label{t_cronograma}
+\begin{table}[htb]
+  \centering \fontsize{8}{14}%\tiny
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+    \hline
+    {\normalsize\bf Ano} & \multicolumn{8}{c|}{\normalsize\bf 2016}\\
+    \hline
+ {\normalsize\bf Mês} &
+ \multirow{2}*{\bf Mai}&\multirow{2}*{\bf Jun}& \multirow{2}*{\bf Jul}&\multirow{2}*{\bf Ago}&\multirow{2}*{\bf Set}&
+ \multirow{2}*{\bf Out}&\multirow{2}*{\bf Nov}&\multirow{2}*{\bf Dez}\\
+   \cline{1-1}
+{\bf Atividades}    & & & & & & & & \\
+\hline
+{\normalsize\bf 1} &\multicolumn{2}{c|}{\cellcolor{meucinza}}&     &   &    &    &       &\\
+\hline
+{\normalsize\bf 2} &\multicolumn{2}{c|}{\cellcolor{meucinza}}&     &   &    &    &       & \\
+\hline
+{\normalsize\bf 3} &\multicolumn{2}{c|}{\cellcolor{meucinza}}&     &   &    &    &       & \\
+\hline
+{\normalsize\bf 4} &    &  \multicolumn{2}{c|}{\cellcolor{meucinza}} &    &  & &    & \\
+\hline
+{\normalsize\bf 5} &    &  & \multicolumn{2}{c|}{\cellcolor{meucinza}}   &  & &    & \\
+\hline
+{\normalsize\bf 6} &    &  &  & {\cellcolor{meucinza}} & &  &  & \\
+\hline
+  \end{tabular}
+  \caption{Cronograma de Atividades}
+  \label{tb:cronograma}
 \end{table}
+
+Lista de Atividades:
+\begin{enumerate}
+\begin{enumerate}
+\item Realizar teste de conformidade sobre os conjuntos de teste QMap, QMultiMap e QQueue.
+\item Realizar teste de conformidade sobre os conjuntos de teste QHash, QMultiHash e QSet.
+\item Realizar teste de conformidade sobre os conjuntos de teste QList, QLinkedList, QStack e QVector.
+\item Criar o modelo operacional das classes \textit{QThread}, \textit{QWaitCondition} e \textit{QWriteLocker} para o suporte a programas multi-tarefas.
+\item Criar o modelo operacional das classes \textit{QMutex}, \textit{QMutexLocker} e \textit{QReadLocker} para o suporte a programas multi-tarefas.
+\item Criar o modelo operacional das classes \textit{QSemaphore} e \textit{QReadWriteLock} para o suporte a programas multi-tarefas.
+\end{enumerate}
+\end{enumerate}
