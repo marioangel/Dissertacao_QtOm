@@ -51,8 +51,8 @@ A Tabela~\ref{table:results-of-ESBMC} mostra os resultados experimentais para as
 
 \begin{table}[!htb]
 %\begin{adjustwidth}{-0.5cm}{}
-\renewcommand\arraystretch{1.18}
-\setlength{\tabcolsep}{0.9pt}
+\renewcommand\arraystretch{0.95}
+\setlength{\tabcolsep}{0.7pt}
 \begin{center} {\small
 \begin{tabular}{|l|l|r||r|r|r|r|r|r||r|r|r|r|r|r||r|r|r|r|r|r|r|}
 \hline
@@ -93,7 +93,7 @@ Vale mencionar que o nível de complexidade ao se verificar o código fonte de um 
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4.5in]{figuras/Time.pdf}
+  \includegraphics[width=5.5in]{figuras/Time.pdf}
   \caption{Comparação entre os tempos de verificação em relação a ESBMC$++$, LLBMC e DIVINE.}
   \label{figure:time}
 \end{figure}
@@ -102,7 +102,7 @@ A Figura~\ref{figure:coverage} mostra que todos os verificadores obtiveram uma t
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=4.5in]{figuras/Coverage.pdf}
+  \includegraphics[width=5.5in]{figuras/Coverage.pdf}
   \caption{Comparação entre a taxa de cobertura em relação a ESBMC++, LLBMC e DIVINE.}
   \label{figure:coverage}
 \end{figure}
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
 \label{fig:Fig6}
 \end{figure}
 
-A Figura~\ref{fig:Fig6} mostra um fragmento de código retirado do principal arquivo da aplicação \textit{Locomaps} que utiliza a classe \textit{QApplication} que está presente no módulo \textit{QtWidgets}. Nesse caso em particular, se o parâmetro $argv$ não for corretamente inicializado, logo o construtor ao ser chamado pelo objeto $app$ não é executado de forma correta acarretando em falhas na aplicação (veja a linha $2$, na Figura~\ref{fig:Fig6}). A fim de verificar esta propriedade, o ESBMC$++$ analisa 2 assertivas em relação aos parâmetros de entrada da aplicação (veja as linhas $4$ e $5$, na Figura~\ref{fig:Fig7}), avaliando-as como pré-condições. Um erro semelhante também foi encontrado na aplicação \textit{GeoMessage Simulator} e uma maneira possível para corrigir tal erro é sempre verificar, com instruções condicionais, se $argv$ e $argc$ são argumentos válidos antes de utiliza-las em uma operação.
+A Figura~\ref{fig:Fig6} mostra um fragmento de código retirado do principal arquivo da aplicação \textit{Locomaps} que utiliza a classe \textit{QApplication} que está presente no módulo \textit{QtWidgets}. Nesse caso em particular, se o parâmetro $argv$ não for corretamente inicializado, logo o construtor ao ser chamado pelo objeto $app$ não é executado de forma correta acarretando em falhas na aplicação (veja a linha $2$, na Figura~\ref{fig:Fig6}). A fim de verificar esta propriedade, o ESBMC$++$ analisa 2 assertivas em relação aos parâmetros de entrada da aplicação (veja as linhas $4$ e $5$, na Figura~\ref{fig:Fig7}), avaliando-as como pré-condições. Um erro semelhante também foi encontrado na aplicação \textit{GeoMessage Simulator} e uma maneira possível para corrigir tal erro é sempre verificar, com instruções condicionais, se $argv$ e $argc$ são argumentos válidos antes de utiliza-las em uma operação.\\\\\\
 
 \begin{figure}[h]
 \centering
@@ -165,13 +165,13 @@ class QApplication {
 \section{Resumo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-De acordo com o embasamento teórico realizado pelos capítulos anteriores em relação as técnicas SMT utilizadas, o processo de verificação de ESBMC++ e o modelo operacional para \textit{Qt Container} desenvolvido. Neste capítulo, inicialmente foi descrito como foi construída a configuração dos experimentos realizados, com o intuito de avaliar a eficácia da metodologia proposta a cerca da verificação de programas que utilizam o \textit{framework} multiplaforma Qt a partir de um conjunto de testes denomidado \textit{esbmc--qt} que contém todos os casos de teste utilizadas na atual avaliação. O \textit{esbmc--qt} contém $711$ programas Qt/C$++$ que de acordo com os experimentos realizados é possível garantir que $353$ dos $711$ casos de teste contêm erro (\textit{i.e.}, $49.65$\% do casos de teste analisados contêm erro) e $358$ casos de teste não possuem falhas (\textit{i.e.}, $50.35$\% dos casos de teste analisados são considerados corretos). 
+De acordo com o embasamento teórico realizado pelos capítulos anteriores em relação as técnicas SMT utilizadas, o processo de verificação de ESBMC++ e o modelo operacional para \textit{Qt Container} desenvolvido. Neste capítulo, inicialmente foi descrito como foi construída a configuração dos experimentos realizados, com o intuito de avaliar a eficácia da metodologia proposta a cerca da verificação de programas que utilizam o \textit{framework} multiplaforma Qt, a partir de uma suíte de testes denomidado \textit{esbmc--qt} que contém todos os casos de teste utilizadas na atual avaliação. O \textit{esbmc--qt} contém $711$ programas Qt/C$++$ que de acordo com os experimentos realizados é possível garantir que $353$ dos $711$ casos de teste contêm erro (\textit{i.e.}, $49.65$\% do casos de teste analisados contêm erro) e $358$ casos de teste não possuem falhas (\textit{i.e.}, $50.35$\% dos casos de teste analisados são considerados corretos). 
 
 Em seguida, foi descrito como foi realizado e avaliado a comparação entre os solucionadores SMT utilizados (Z3, Boolector e Yices 2) junto com o ESBMC$++$ utilizando programas Qt/C$++$ sequenciais. Isso foi realizado, pois, solucionadores SMT podem afetar fortemente os resultados obtidos, uma vez que não existe homogeneidade em relação a abordagem de implementação e respectivas heurísticas. Sendo assim, Yices 2 obteve os piores resultados, apresentando uma taxa de cobertura de $78$\% e um tempo de verificação de $26,27$ minutos mas tanto Z3 quanto Boolector apresentaram uma taxa de cobertura de $89$\% com tempos de verificação de $223,6$ minutos e $26,38$ minutos, respectivamente. Por fim, Boolector mostrou-se $8,5$ vezes mais rápido do que o solucionador Z3, apesar da mesma precisão de ambos. 
 
-Também foram descrito os resultados obtidos a cerca da verificação de todos os casos de teste presentes na suíte de teste \textit{esbmc--qt} utilizando as ferramentas de verificação distintas (ESBMC$++$, LLBMC e DIVINE) com o objetivo de analisar a corretude e a eficácia do modelo operacional proposto junto dessas ferramentas. Cada processo de verificação e as limitações das ferramentas são descritos. Vale ressaltar que o ESBMC$++$ foi capaz de identificar cerca de $89,3$\% dos erros nos casos de teste utilizados (\textit{i.e.}, $631$ dos $708$ casos de testes utilizados possuem erros), LLBMC e DIVINE apresentam, respectivamente, taxas com $81,4$\% e $89$\% (\textit{i.e.}, $576$ e $630$ dos $708$ casos de teste utilizados possuem erros) consequência, a metodologia proposta não apenas se limita a uma determinada ferramenta, podendo-se adaptar para aplicações específicas em que algumas abordagens sejam mais adequedas do que outras. 
+Também foram descrito os resultados obtidos a cerca da verificação de todos os casos de teste presentes na suíte de teste \textit{esbmc--qt} utilizando ferramentas de verificação distintas (ESBMC$++$, LLBMC e DIVINE) com o objetivo de analisar a corretude e a eficácia do modelo operacional proposto junto dessas ferramentas. Cada processo de verificação e as limitações das ferramentas são descritos. Vale ressaltar que o ESBMC$++$ foi capaz de identificar cerca de $89,3$\% dos erros nos casos de teste utilizados (\textit{i.e.}, $631$ dos $708$ casos de testes utilizados possuem erros), LLBMC e DIVINE apresentam, respectivamente, taxas com $81,4$\% e $89$\% (\textit{i.e.}, $576$ e $630$ dos $708$ casos de teste utilizados possuem erros). Como consequência, a metodologia proposta não apenas se limita a uma determinada ferramenta, podendo-se adaptar para aplicações específicas em que algumas abordagens sejam mais adequedas do que outras. 
 
-Por fim, foi descrito os resultados obtidos atráves da verificação de 2 aplicações reais \textit{Locomaps} e \textit{GeoMessage Simulator} utilizando QtOM. O ESBMC$++$ junto ao modelo operacional proposto (QtOM) foi aplicado para verificar as aplicações \textit{Locomaps} e \textit{GeoMessage Simulator} buscando verificar as seguintes propriedades: violação dos limites de um array, estouros aritméticos, divisão por zero, segurança de ponteiro e outras propriedades específicas do \textit{framework} definidas em QtOM. O processo de verificação de ambas as aplicações com a metodologia proposta levou aproximadamente $6,7$ segundos para gerar $32$ VCs para \textit{Locomaps} e $16$ segundos para gerar $6421$ VCs para \textit{GeoMessage Simulator} em um comum \textit{desktop} mas ambas aplicações possuiam o mesmo erro.
+Por fim, foi descrito os resultados obtidos atráves da verificação de 2 aplicações reais \textit{Locomaps} e \textit{GeoMessage Simulator} utilizando QtOM. O ESBMC$++$ junto ao modelo operacional proposto (QtOM) foi aplicado para verificar as aplicações \textit{Locomaps} e \textit{GeoMessage Simulator} buscando verificar as seguintes propriedades: violação dos limites de um array, estouros aritméticos, divisão por zero, segurança de ponteiro e outras propriedades específicas do \textit{framework} definidas em QtOM. O processo de verificação de ambas as aplicações com a metodologia proposta levou aproximadamente $6,7$ segundos para gerar $32$ VCs para \textit{Locomaps} e $16$ segundos para gerar $6421$ VCs para \textit{GeoMessage Simulator} em um comum \textit{desktop} onde ambas aplicações possuiam o mesmo erro.
 
 %Outros topicos
 %\input{5_k-induction/algoritmo.tex}
