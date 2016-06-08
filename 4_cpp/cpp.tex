@@ -65,10 +65,10 @@ Para simular adequadamente os \textit{containers} sequenciais, os modelos propos
 
 Vale ressaltar que todos os métodos, a partir dessas bibliotecas, podem ser expressos em variações simplificadas de três operações principais, \textit{insertion}($\mathit{C.insert(\mathit{I}, \mathit{V}, \mathbb{N})}$), \textit{deletion}($\mathit{C.erase(\mathit{I})}$) e \textit{\textit{search}}($\mathit{C.search(\mathit{V})}$). A partir da transformação SSA, os efeitos adversos sobre \textit{iterators} e \textit{containers} são explícitos para que as operações retornem novos \textit{iterators} e \textit{containers}.
 
-Por exemplo, um \textit{container} $c$ com uma chamada \textit{c.search}($v$) representa uma pesquisa pelo elemento $v$ no respectivo \textit{container}. Deste modo, se esse elemento for encontrado, é retornado um \textit{iterator} que aponta para o respectivo elemento, caso contrário, é retornado um \textit{iterator} que aponta para a posição imediatamente posterior ao último elemento do \textit{container} (\textit{i.e.}, $\mathit{c.end()}$). Desta forma, a instrução ``$\mathit{c.search}(v);$'' torna-se ``$(c',i')=\mathit{c.search}(v);$'' que possuem efeitos adversos de forma explícita. Assim, a função de tradução $\cal C$ descreve premissas que estão relacionadas com o ``antes" e o ``depois" das respectivas versões das variáveis do modelo. Na verdade, notações com apóstrofe (\textit{e.g.}, $c'$ and $i'$) representam o estado das variáveis do modelo, após realizar a execução da respectiva operação; notações simplificadas (\textit{e.g.}, $c$ and $i$) representam os estados anteriores. Além disso, $select(c, i = lower_{bound} \ldots i = upper_{bound})$ representa uma expressão de \textit{loop} (\textit{e.g.}, $for$ e $while$), onde cada valor de $c$, a partir da posição $lower_{bound}$ até $upper_{bound}$, será selecionado. Da mesma forma, $store(c_{1}, lower_{bound}^{1},select(c_{2},lower_{bound}^{2}))$\\$ \ldots store(c_{1},upper_{bound}^{1},select(c_{2},upper_{bound}^{2}))$ também representa uma expressão de \textit{loop}, onde cada valor de $c_{2}$, a partir de posição $lower_{bound}^{2}$ até a posição $upper_{bound}^{2}$ serão armazenados em $c_{1}$ nas posições $lower_{bound}^{1}$ até $upper_{bound}^{1}$, respectivamente. Sendo assim,
+Por exemplo, um \textit{container} $c$ com uma chamada \textit{c.search}($v$) representa uma pesquisa pelo elemento $v$ no respectivo \textit{container}. Deste modo, se esse elemento for encontrado, é retornado um \textit{iterator} que aponta para o respectivo elemento, caso contrário, é retornado um \textit{iterator} que aponta para a posição imediatamente posterior ao último elemento do \textit{container} (\textit{i.e.}, $\mathit{c.end()}$). Desta forma, a instrução ``$\mathit{c.search}(v);$'' torna-se ``$(c',i')=\mathit{c.search}(v);$'' que possuem efeitos adversos de forma explícita. Assim, a função de tradução $\mathcal{C}$ descreve premissas que estão relacionadas com o ``antes" e o ``depois" das respectivas versões das variáveis do modelo. Na verdade, notações com apóstrofe (\textit{e.g.}, $c'$ and $i'$) representam o estado das variáveis do modelo, após realizar a execução da respectiva operação; notações simplificadas (\textit{e.g.}, $c$ and $i$) representam os estados anteriores. Além disso, $select(c, i = lower_{bound} \ldots i = upper_{bound})$ representa uma expressão de \textit{loop} (\textit{e.g.}, $for$ e $while$), onde cada valor de $c$, a partir da posição $lower_{bound}$ até $upper_{bound}$, será selecionado. Da mesma forma, $store(c_{1}, lower_{bound}^{1},select(c_{2},lower_{bound}^{2}))$\\$ \ldots store(c_{1},upper_{bound}^{1},select(c_{2},upper_{bound}^{2}))$ também representa uma expressão de \textit{loop}, onde cada valor de $c_{2}$, a partir de posição $lower_{bound}^{2}$ até a posição $upper_{bound}^{2}$ serão armazenados em $c_{1}$ nas posições $lower_{bound}^{1}$ até $upper_{bound}^{1}$, respectivamente. Sendo assim,
 %
 \[\begin{array}{lll}
-\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.search}(v)):=}\\
+\multicolumn{3}{l}{{\mathcal{C}}((c',i')=c\mathit{.search}(v)):=}\\
   & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
   & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_v, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) == v \\
 %  & & \textit{select}(\ldots(\textit{select}(c_v, i_{pos} = 0),\\
@@ -106,7 +106,7 @@ k \rightarrow v \iff select\left(c_k,\omega\right) = k \wedge select\left(c_v,\o
 Portanto, a operação de inserção para \textit{containers} associativos pode ser realizada de duas maneiras diferentes. Em primeiro lugar, se a ordem não importa, um novo elemento é inserido no final de $c_k$ e $c_v$. Desta forma, dado um container $c$, o método $c.insert(k,v)$ ao ser chamado realiza inserções de elementos no \textit{container} $c$ com um o valor $v$ e associado a uma chave $k$, porém se $k$ já existe, ele substitui o valor associado a $k$ por $v$ e retorna um \textit{iterator} que aponta para o elemento inserido ou modificado. Deste modo,
 %
 \[\begin{array}{lll}
-\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
+\multicolumn{3}{l}{{\mathcal{C}}((c',i')=c\mathit{.insert}(k,v)):=}\\
   & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} + 1}\\
   & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
   & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_k, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) == k \\
@@ -140,7 +140,7 @@ Em uma outra versão do método de inserção onde a ordem das chaves possuem import
 
 %
 \[\begin{array}{lll}
-\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.insert}(k,v)):=}\\
+\multicolumn{3}{l}{{\mathcal{C}}((c',i')=c\mathit{.insert}(k,v)):=}\\
   & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} + 1}\\
   & \multicolumn{2}{l}{\wedge\:i' := c.\textit{begin}()}\\
   & \wedge\: g_0 := &\!\!\!\!\textit{select}(c_k, i_{pos} = 0 \ldots i_{pos} = c_{size} - 1) > k \\
@@ -162,7 +162,7 @@ Em uma outra versão do método de inserção onde a ordem das chaves possuem import
 Em casos onde chaves com vários valores associados são permitidos, a comparação feita será ignorada, caso seja verificado que já existe um elemento associado a respectiva chave analisada. Por fim, com o propósito de realizar uma exclusão, o método apagar, o qual é representado por $erase$($i$) onde $i$ é um \textit{iterator} que aponta para o elemento a ser excluído. Isso exclui o elemento apontado por $i$, movendo para trás todos os elementos seguidos pelo elemento que foi excluído. Deste modo,
 %
 \[\begin{array}{lll}
-\multicolumn{3}{l}{{\cal C}((c',i')=c\mathit{.erase}(i)):=}\\
+\multicolumn{3}{l}{{\mathcal{C}}((c',i')=c\mathit{.erase}(i)):=}\\
   & \multicolumn{2}{l}{\wedge\:{c'}_{size} := {c}_{size} - 1}\\
   & \wedge\: {c'}_k := &\!\!\!\!\textit{store}(c_k,{i'}_{pos}, \textit{select}(c_k, {i'}_{pos} + 1)),\\
   & & \:\:\:\:\:\:\ldots,\\
