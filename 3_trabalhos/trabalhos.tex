@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{SMT baseado em técnicas BMC para programas C++ que utilizam o \textit{framework} Qt}
+\chapter{Metodologia}
 \label{chapter:smt-bmc}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Este capítulo descreve todo o processo de verificação com o ESBMC$++$ que apenas possui suporte a verificação de programas ANSI-C/C$++$ mas juntamente ao modelo operacional proposto (QtOM), torna possível a verificação de programas que utilizam o \textit{framework} multiplataforma Qt escritos em C$++$, apesar dos códigos analisados utilizarem essa linguagem de programação, o \textit{framework} também possui bibliotecas nativas com estruturas hierárquicas e complexas o que poderia afetar desnecessariamente as VCs não havendo qualquer afirmação a cerca de propriedades específicas analisadas durante o processo de verificação. Por fim, é descrito como QtOM se utiliza de pré e pós-condições para se obter o mesmo comportamento descrito na documentação oficial do \textit{framework}~\cite{Qt15}.
+Este capítulo descreve todo o processo de verificação com o ESBMC$++$ que apenas possui suporte a verificação de programas ANSI-C/C$++$ que juntamente ao modelo operacional proposto (QtOM), torna possível a verificação de programas que utilizam o \textit{framework} multiplataforma Qt escritos em C$++$, apesar dos códigos analisados utilizarem essa linguagem de programação, o \textit{framework} também possui bibliotecas nativas com estruturas hierárquicas e complexas o que poderia afetar desnecessariamente as VCs não havendo qualquer afirmação a cerca de propriedades específicas analisadas durante o processo de verificação. Por fim, é descrito como QtOM se utiliza de pré e pós-condições para se obter o mesmo comportamento descrito na documentação oficial do \textit{framework}~\cite{Qt15}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introdução}

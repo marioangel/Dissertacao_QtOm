@@ -7,7 +7,7 @@ A atual disseminação com relação aos sistemas embarcados e sua devida importânci
 
 Empresas de eletrônica de consumo cada vez investem mais em tempo e esforço para desenvolver alternativas rápidas e baratas referentes à verificação, com o objetivo de verificar a corretude de seus sistemas com o intuito de evitar perdas fincanceiras~\cite{Berard10}. Entre as alternativas já existentes, uma das mais eficiente e menos custosa é a abordagem da verificação de modelos~\cite{Clarke99}~\cite{Christel08}. Porém, existem muitos sistemas que não são possíveis de verificá-los de uma maneira automática devido à falta de suporte de certos tipos de linguagens e \textit{frameworks} por parte dos verificadores de código. Por exemplo, o verificador \textit{Java PathFinder} é capaz de verificar códigos em Java baseado em \textit{bytecode}~\cite{NASA07}, mas não há suporte a verificação (completa) de aplicações Java que utilizam o sistema operacional Android~\cite{MerweMV14}. Na realidade, esta verificação somente se torna possível se existir uma representação abstrata das bibliotecas associadas, denominada de modelo operacional (MO) que, de forma conservadora, aproxima-se a semântica usada pelo sistema a ser verificado~\cite{MerweTMV15}.
 
-Este trabalho identifica as principais características do \textit{framework} Qt e propõe um modelo operacional (MO) que tem como propósito analisar e verificar as propriedades relacionadas de acordo com as suas funcionalidades. Os algoritmos desenvolvidos neste trabalho foram intregrados em uma ferramenta de verificação de modelos limitada (do inglês, \textit{Bounded Model Checking} - BMC) baseada nas teorias do módulo da satisfatibilidade (do inglês, \textit{satisfiability modulo theories} - SMT), denominada \textit{Efficient SMT-based Context-Bounded Model Checker} (ESBMC$++$)~\cite{ECBS13}~\cite{ICSE11}~\cite{TSE12}, a fim de verificar propriedades específicas de programas escritos em Qt/C++. A combinação entre ESBMC e MOs foi aplicada anteriormente para fornecer suporte à verificação de programas escritos em C++, conforme descrito por Ramalho \textit{et al.}~\cite{ECBS13}. No entanto, na metodologia proposta, um MO é utilizado para identificar elementos do \textit{framework} Qt e verificar propriedades específicas relacionadas a estas estruturas por meio de pré e pós-condições~\cite{monteiro2015}.
+Essa dissertação identifica as principais características do \textit{framework} Qt e propõe um modelo operacional (MO) que tem como propósito analisar e verificar as propriedades relacionadas de acordo com as suas funcionalidades. Os algoritmos desenvolvidos neste trabalho foram intregrados em uma ferramenta de verificação de modelos limitada (do inglês, \textit{Bounded Model Checking} - BMC) baseada nas teorias do módulo da satisfatibilidade (do inglês, \textit{satisfiability modulo theories} - SMT), denominada \textit{Efficient SMT-based Context-Bounded Model Checker} (ESBMC$++$)~\cite{ECBS13}~\cite{ICSE11}~\cite{TSE12}, a fim de verificar propriedades específicas de programas escritos em Qt/C++. A combinação entre ESBMC e MOs foi aplicada anteriormente para fornecer suporte à verificação de programas escritos em C++, conforme descrito por Ramalho \textit{et al.}~\cite{ECBS13}. No entanto, na metodologia proposta, um MO é utilizado para identificar elementos do \textit{framework} Qt e verificar propriedades específicas relacionadas a estas estruturas por meio de pré e pós-condições~\cite{monteiro2015}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,15 +22,33 @@ Cada vez mais, empresas que possuem como atividade principal o desenvolvimento d
 \section{Objetivos}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-O objetivo geral deste trabalho é aplicar as técnicas de verificação através de modelos operacionais para checar aplicações que utilizam o \textit{framework} Qt através de ferramentas de verificação com o intuito de validar a cobertura e o comportamento do modelo operacional proposto em relação ao \textit{framework} utilizado.
+O objetivo geral dessa dissertação é aplicar a técnica de verificação de modelos limitados para analisar aplicações que utilizam o \textit{framework} multiplataforma Qt, usando ferramentas de verificação para validar a taxa de cobertura e o comportamento da metodologia proposta, quando comparada com a documentação existente do \textit{framework} utilizado.
 
 Os objetivos específicos são listados a seguir:
 
 \begin{itemize}
   \item Desenvolver um modelo operacional que oferece estritamente o mesmo comportamento do \textit{framework} Qt com foco na verificação de suas propriedades.
+  \item Analisar as aplicações que utilizam o framework Qt contidas no conjunto de benckmarks (esbmc--qt) com foco em duas categorias de verificação acesso de memória e avaliação de manipulação de dados. 
   \item Verificar o acesso de memória inválida, valores que especificam o tempo, acesso à arquivos ausentes, ponteiros nulos, manipulação de cadeia de caracteres (\textit{strings}), uso de \textit{containers}, entre outras propriedades do \textit{framework} Qt.
-  \item Aplicar a metodologia de verificação proposta em aplicações reais e um benchmark que utilizam o \textit{framework} Qt.
+  \item Avaliar experimentalmente duas apliacações reais que utilizam o \textit{framework} Qt.
+  \item Aplicar a metodologia de verificação proposta em aplicações reais e um benchmark (\textit{esbmc--qt}) que utilizam o \textit{framework} Qt.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Contribuições}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Este trabalho é uma extensão de artigos já publicados anteriormente~\cite{ECBS13,monteiro2015}. O respectivo modelo operacional (MO) proposto foi ampliado com o objetivo de incluir novas funcionalidades dos principais módulos do Qt, neste caso em particular, \textit{QtGui} e \textit{QtCore}. De fato, as principais contribuições aqui são:
+
+\begin{itemize}
+  \item Suportar \textit{containers} baseados em templates sequenciais e associativos;
+  \item Integrar o modelo operacional proposto denominado QtOM ao processo de verificação de programas em C++ em verificadores que se encontram no estado da arte, neste caso, DIVINE~\cite{BBH13} e LLBMC~\cite{FalkeMS13};
+  \item Fornecer suporte à verificação de duas aplicações reais que utilizam Qt denominadas Locomaps~\cite{locomaps} e Geomessage~\cite{geomessage}, respectivamente.
+  \item Avaliar o desempenho de três solucionadores SMT (Z3~\cite{Z308}, Yices~\cite{Dutertre:cav2014} e Boolector~\cite{Boolector09}) juntamente com a abordagem proposta utilizando o conjunto de \textit{benchmarks} extensivamente revisado e ampliado em relação ao trabalho anterior~\cite{monteiro2015}. 
+\end{itemize}
+
+Por fim, foram incluídas representações para todas as bibliotecas relacionadas as classes de Qt \textit{containers}. De acordo com o conhecimento atual em verificação de software, não há outro verificador que utilize modelos e se aplique técnicas BMC para verificar programas baseados no \textit{framework} Qt sobre dispositivos de eletrônica de consumo.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Trabalhos relacionados}
@@ -49,21 +67,6 @@ Blanc, Groce e Kroening descrevem a verificação de programas em C++ que usam \te
 O \textit{C Bounded Model Checker} (CBMC) implementa a técnica BMC para programas ANSI-C/C++ por meio de solucionadores SAT/SMT~\cite{CBMC14}. Vale ressaltar que o ESBMC foi construído a partir do CBMC, portanto, ambos verificadores possuem processos de verificação parecidos. Na verdade, o CBMC processa programas C/C++ usando a ferramenta goto-cc~\cite{Wintersteiger09}, a qual compila o código fonte da aplicação para um \textit{GOTO-program} equivalente (ou seja, um grafo de fluxo de controle), a partir de um modelo compátivel ao GCC. A partir de \textit{GOTO-program}, o CBMC cria uma árvore abstrata de sintaxe (do inglês, \textit{Abstract Syntax Tree} - AST) que é convertida em um formato independente da linguaguem interna usada para as etapas restantes. O CBMC também utiliza duas funções recursivas $\mathcal{C}$ e $\mathcal{P}$ que registram as \emph{restrições} (ou seja, premissas e atribuições de variáveis) e as \emph{propriedades} (ou seja, condições de segurança e premissas definidas pelo o usuário), respectivamente. Este verificador cria de forma automática as condições de segurança que verificam o estouro aritmético, violação no limite dos vetores e checagem de ponteiro nulo~\cite{Sites74}. Por fim, um gerador de condições de verificação (do inglês, \textit{Verification Condition Geneator} - VCG) cria condições de verificação (do inglês, Verification Conditions - VCs) a partir das fórmulas criadas e os envia para um solucionador SAT/SMT. Embora o CBMC esteja relacionado como susposto verificador de programas em C++, Ramalho \textit{et al.}~\cite{ECBS13} e Merz \textit{et al.}~\cite{Florian12} relatam que o CBMC falha ao verificar diversas aplicações simples em C++, o que também foi confirmado neste trabalho (ver Seção~\ref{sec:evaluation}).
 
 Finalmente, destaca-se que o QtOM foi completamente escrito na linguagem de programação C++, o que facilita a integração dentro de processos de verificação de outros verificadores. No presente trabalho, o QtOM não foi somente intregado ao ESBMC$++$, mas também no DIVINE~\cite{BBH13} e LLBMC~\cite{FalkeMS13}, afim de obter uma avaliação sobre a abordagem proposta.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Contribuições}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Este trabalho é uma extensão de artigos já publicados anteriormente~\cite{ECBS13,monteiro2015}. O respectivo modelo operacional (MO) proposto foi ampliado com o objetivo de incluir novas funcionalidades dos principais módulos do Qt, neste caso em particular, \textit{QtGui} e \textit{QtCore}. De fato, as principais contribuições aqui são:
-
-\begin{itemize}
-  \item Suportar \textit{containers} baseados em templates sequenciais e associativos;
-  \item Integrar o modelo operacional proposto denominado QtOM ao processo de verificação de programas em C++ em verificadores que se encontram no estado da arte, neste caso, DIVINE~\cite{BBH13} e LLBMC~\cite{FalkeMS13};
-  \item Fornecer suporte à verificação de duas aplicações reais que utilizam Qt denominadas Locomaps~\cite{locomaps} e Geomessage~\cite{geomessage}, respectivamente.
-  \item Avaliar o desempenho de três solucionadores SMT (Z3~\cite{Z308}, Yices~\cite{Dutertre:cav2014} e Boolector~\cite{Boolector09}) juntamente com a abordagem proposta utilizando o conjunto de \textit{benchmarks} extensivamente revisado e ampliado em relação ao trabalho anterior~\cite{monteiro2015}. 
-\end{itemize}
-
-Por fim, foram incluídas representações para todas as bibliotecas relacionadas as classes de Qt \textit{containers}. De acordo com o conhecimento atual em verificação de software, não há outro verificador que utilize modelos e se aplique técnicas BMC para verificar programas baseados no \textit{framework} Qt sobre dispositivos de eletrônica de consumo.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
