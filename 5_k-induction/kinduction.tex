@@ -162,6 +162,28 @@ class QApplication {
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Verificação da conformidade de QtOM}
+\label{sec:conformance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Todos os processos, funções, APis, ferramentas e especificações necessárias para o desenvolvimento de aplicações que utilizam o \textit{framework} multiplataforma Qt são descritas por \textit{The Qt Developers} em~\cite{qtdevelopers}. Na verificação de modelos, as aplicações analisadas se utilizam de funções disponibilizadas pelo ambiente de verificação criado com o objetivo de garantir a exatidão da verificação, ou seja, se obter uma análise de forma correta. Para que isso ocorra, o comportamento do sistema desenvolvido (modelo operacional) deve ser o mesmo do sistema real (framework) analisado. 
+
+Inicialmente, foi realizado uma análise sobre todos os casos de testes utilizados em \textit{esbmc--qt} com intuito de verificar a imparcialidade e a confiabilidade das aplicações utilizadas. Todos os casos de teste analisados foram desenvolvidos utilizando a linguaguem C++ junto com as funções disponibilizadas pelo \textit{framework} Qt, onde cada implementação usa as estruturas de dados e funções presente em Qt \textit{containers} em todas as condições possíveis de acordo com \textit{The Qt Documentation}~\cite{qtdocumentation}. Cada caso de teste proporciona uma falha e um sucesso de acordo com a estrutura ou função empregada. Logo em seguida, todos os casos de testes presentes em \textit{esbmc--qt} foram compilados e executados utilizando o ambiente de desenvolvimento do Qt denominado QtCreator. QtCreator é um ambiente de desenvolvimento integrado (IDE) multiplataforma utilizado por desenvolvedores para criar diversas aplicações que utilizam o \textit{framework} Qt para desktops, sistemas embarcados e plataformas de dispositivos móveis. É um ambiente de desenvolvimento disponível para Linux, OS X e Windows~\cite{qtcreator}. Dessa forma, se obteve um comportamento base de Qt \textit{containers} que seria comparado ao comportamento do modelo operacional proposto (QtOM) com o objetivo de verificar o nível de semelhança entre ambos, visto que não há outra ferramenta ou modelo operacional desenvolvido até o momento. Por fim, os mesmo casos de teste compilados e executados por QtCreator foram compilados e executados por Clang com o modelo operacional proposto (QtOM) intregado a ele com o intuito de se determinar o seu comportamento.
+
+A Figura~\ref{fig:conformance} mostra o resultado da comparação descrita anteriormente, assim como, em testes anteriores os conjuntos de testes estão divididos em \textit{containers} associativos compostos por QHash, QSet, QMap, QMultiHash e QMultiMap e \textit{containers} sequenciais compostos por QList, QQueue, QLinkedList, QStack e QVector. Vale ressaltar que QtCreator por ser o ambiente de desenvolvimento padrão para criação de aplicações que usam o \textit{framework} Qt, obteve um nível de conformidade de 100\% em todos os conjuntos de testes que compõe \textit{esbmc--qt} em todas as condições possíveis de acordo com \textit{The Qt Documentation}~\cite{qtdocumentation}. Entretanto, ao se analisar o comportamento do compilador Clang junto com o modelo operacional proposto (QtOM), se obtem um nível de conformidade com média de 94,320\% em todos os conjuntos de testes que compõe \textit{esbmc--qt} em todas as condições possíveis de acordo com \textit{The Qt Documentation}~\cite{qtdocumentation}. 
+
+Ao se analisar de modo particular, os conjuntos de testes QMultiHash, QMultiMap, QQueue, QStack obtiveram um nível de 100\% de semalhança comparado aos resultados obtidos por QtCreator. O conjunto de teste QList obteve o menor nível de semelhança em relação a QtCreator com 84,677\%, isso ocorreu devido algumas funções presente na classe \textit{QList} não possuirem uma representação dentro do modelo operacional proposto, o mesmo ocorreu com o conjunto de teste QVector que obteve um nível de semelhança de 90,789\% e considero o conjunto de teste com o maior número de casos de teste. Vale ressaltar que o modelo operacional desenvolvido é usado junto com ferramentas de verificação que possuem suas limitações em relação as linguagens bases utilizadas o que consequentemente afeta na criação das representações de algumas funções, não sendo possível a criação de certas representações (\textit{i.e.} fromSet, fromStdList, fromVector, etc).
+
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=5.5in]{figuras/conformance.png}
+  \caption{Comparação entre o comportamento de QtCreator e Clang+QtOM parar medir a conformidade de QtOM.}
+  \label{fig:conformance}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
