@@ -20,7 +20,7 @@ O uso do QtOM proposto neste capítulo possui como objetivo solucionar o problema
   \label{figure:Fig2}
 \end{figure}
 
-Comparando com ~\cite{monteiro2015}, este trabalho o QtOM inclui atualmente uma representação inicial para todas as bibliotecas do módulo \textit{QtCore} e \textit{QtGui}, assim como fornece um suporte completo à todas as classes \textit{container} que são amplamente utilizadas em aplicações reais.
+Comparando com ~\cite{monteiro2015}, o qual possui uma versão de QtOM não moduralizada por tipos de classes e o suporte ao \textit{framework} Qt era de forma básica. Inicialmente, neste trabalho foi feito uma moduralização em QtOM. Os módulos \textit{QtCore} e \textit{QtGui} continuam presentes como módulos principais mas também foram adicionados outros três módulos (\textit{QtDeclarative}, \textit{QtWidgets}, \textit{QtNetwork}) com o objetivo de aumentar o suporte do modelo operacional proposto possibilitando assim a sua aplicação na análise de aplicações reais. Internamente foram criadas representações de todas classes pertencentes a esses módulos com um total de 261 representações, assim como um suporte especifico e completo à todas as classes \textit{container} do \textit{framework} Qt que também são amplamente utilizadas em aplicações reais.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Pré-condições}
