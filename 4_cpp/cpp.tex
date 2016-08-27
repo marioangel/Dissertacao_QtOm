@@ -3,11 +3,16 @@
 \label{chapter:container-model}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Este capítulo descreve o processo de criação do modelo operacional QtOM enfatizando as classes \textit{containers} do \textit{framework} Qt. Inicialmente, na Seção~\ref{sec:introcap4} é descrito como está disposto as classes containers no \textit{framework} Qt, assim como, o seu uso em aplicações. Logo em seguida, na Seção~\ref{sec:language} é descrito a linguagem que foi utilizada como base para se criar as representações contidas em QtOM com o objetivo de formalizar a implementação de cada \textit{container}. Por fim, nas Seções~\ref{sec:sequential} e~\ref{sec:associative} é descrito como as classes containers foram divididas entre sequenciais e associativas, e o seu comportam no momento de sua utilização pelo modelo operacional através de lógica formal. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introdução}
+\label{sec:introcap4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 O módulo \textit{Qt Core} possui um subconjunto de classes denominado \textit{Qt Container}~\cite{Qt15} como alternativa para os \textit{containers} da \textit{Standard Template Library} (STL) disponíveis na linguagem C++~\cite{Iso2003}. Por exemplo, durante o desenvolvimento de uma determinada aplicação, é necessário a criação de uma pilha de tamanho variável para o armazenamento de objetos do tipo \textit{QWidgets}, neste caso, uma alternativa seria o uso da classe \textit{QStack} que implementa um \textit{container} com a política LIFO (do inglês, \textit{last-in, first-out}) (\textit{e.g.}, \textit{QStack}$<$\textit{QWidget}$>$). Além disso, tais \textit{containers} também fazem uso de estruturas denominadas \textit{iterators} no estilo Java/STL, de modo a se deslocar ao longo dos dados armazenados no \textit{container} criado.  
 
 Desta forma, esse subconjunto de classes pode ser classificado em dois subgrupos: sequenciais e associativos, dependendo da estrutura de armazenamento implementada. Neste contexto, as classes \textit{QList}, \textit{QLinkedList}, \textit{QVector}, \textit{QStack} e \textit{QQueue} são classificadas como \textit{containers} sequenciais, enquanto as classes \textit{QMap}, \textit{QMultiMap}, \textit{QHash}, \textit{QMultiHash} e \textit{QSet} são classificadas como \textit{containers} associativos.
-
-Por fim, uma linguagem base é proposta na Seção~\ref{sec:language} com o objetivo de formalizar a implementação de cada \textit{container} e, em seguida, as Seções~\ref{sec:sequential} e~\ref{sec:associative} descrevem as implementações formais para os \textit{containers} sequenciais e associativos, respectivamente.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Linguagem Base}
