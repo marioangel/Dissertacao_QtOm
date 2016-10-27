@@ -43,7 +43,7 @@ De acordo com o fragmento de código mostrado na Figura~\ref{fig:Fig3} que perten
 
 \begin{figure}[htb]
 \centering
-\begin{minipage}{0.6\textwidth}
+\begin{minipage}{0.9\textwidth}
 \begin{lstlisting}
 QString loadSimulationFile( const QString &fileName )
 {
@@ -68,12 +68,11 @@ QString loadSimulationFile( const QString &fileName )
 \label{fig:Fig3}
 \end{figure}
 
-A Figura~\ref{fig:Fig4} mostra um trecho do modelo operacional correspondente à classe QFile com uma implementação de $setFileName$() (veja as linhas 5-10), onde apenas as pré-condições são verificadas. Em particular, se o objeto QString passado como um parâmetro não estiver vazio (veja a linha 6), a operação é válida e, consequentemente, a premissa assumida é considerada \textit{verdadeira}. Caso contrário, se uma operação incorreta for realizada, como uma \textit{string} vazia for passada como parâmetro, a premissa assumida é considerada \textit{falsa}. Nesse caso, o ESBMC$++$ retornaria um contraexemplo com todos os passos necessários para reproduzir a execução de tal violação, além de descrever o erro da respectiva premissa violada.\\
-
+A Figura~\ref{fig:Fig4} mostra um trecho do modelo operacional correspondente à classe QFile com uma implementação de $setFileName$() (veja as linhas 5-10), onde apenas as pré-condições são verificadas.
 
 \begin{figure}[htb]
 \centering
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.9\textwidth}
 \begin{lstlisting}
 class QFile {
 ...
@@ -91,6 +90,8 @@ class QFile {
 \label{fig:Fig4}
 \end{figure}
 
+Em particular, se o objeto QString passado como um parâmetro não estiver vazio (veja a linha 6), a operação é válida e, consequentemente, a assertiva é considerada \textit{true}. Caso contrário, se uma operação incorreta for realizada, como uma \textit{string} vazia for passada como parâmetro, a assertiva é considerada \textit{false}. Nesse caso, o ESBMC$++$ retornaria um contraexemplo com todos os passos necessários para reproduzir a execução de tal violação, além de descrever o erro da respectiva premissa violada.
+
 Do ponto de vista da verificação de software, existem métodos/funções que também não apresentam qualquer propriedade a ser verificada como aqueles cuja única finalidade é imprimir valores na tela. Dado que ESBMC$++$ realiza o processo verificação a nível de software ao invés de testar o hardware, a corretude a cerca do valor impresso na tela não foi abordado neste trabalho. Por fim, para tais métodos só existem assinaturas, de modo que o verificador proposto seja capaz de reconhecer a estrutura desejada para que durante o processo de análise seja construído uma árvores IRep confiável. No entanto, eles não apresentam qualquer modelagem (corpo de função), uma vez que não exista nenhuma propriedade a nível de software a ser verificada.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,15 +99,13 @@ Do ponto de vista da verificação de software, existem métodos/funções que também
 \label{sec:postconditions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{Colocar a imagem do exemplo do modelo operacional presente no slide de apresentação aqui}
+Em aplicações reais existem métodos que não contêm apenas propriedades que serão tratadas como pré-condição, mas também serão considerados como pós-condições~\cite{monteiro2015,Musuvathi2002}. Por exemplo, de acordo com a documentação do \textit{framework} Qt~\cite{Qt15}, a função $setFileName$ conforme descrita na Seção~\ref{sec:preconditions} não deve ser utilizada se o respectivo arquivo passado como parâmetro já estiver sendo utilizado, o que é verificado em seu código fonte a partir da estrutura $if$ presente nas linhas $3$ e $4$ visto na Figura~\ref{fig:Fig3}.
 
-Em aplicações reais existem métodos que não contêm apenas propriedades que serão tratadas como pré-condição, mas tambem serão considerados como pós-condições~\cite{monteiro2015,Musuvathi2002}. Por exemplo, de acordo com a documentação do Qt~\cite{Qt15}, a função $setFileName$ conforme descrita na Seção~\ref{sec:preconditions} não deve ser utilizada se o respectivo arquivo já estiver sendo utilizado, o que é verificado em seu código fonte a partir da estrutura $if$ presente nas linhas $3$ e $4$ visto na Figura~\ref{fig:Fig3}.
-
-No entanto, a execução da instrução presente na linha $4$ (veja Fig.~\ref{fig:Fig3}) seria não determinística para o ESBMC$++$, assim como, a assertiva presente na linha $8$ do modelo operacional associado, como mostrado na Figura~\ref{fig:Fig4}, uma vez que não há como se afirmar se o respectivo arquivo está sendo utilizado ou não. Desta forma, é evidente que será necessário simular o comportamento do método $isOpen$() com o intuito de verificar de forma coerente as propriedades relacionadas com manipulação de arquivos. Como a classe \textit{QFile} indiretamente herda os métodos $open$() e $isOpen$(), a partir da classe \textit{QIODevice}, para simulações comportamentais desses métodos constrói-se um modelo operacional para \textit{QIODevice} conforme mostrado na Figura~\ref{fig:Fig5}.
+No entanto, a execução da instrução presente na linha $4$ (veja Fig.~\ref{fig:Fig3}) seria não determinística para o ESBMC$++$, assim como a assertiva presente na linha $7$ (veja Fig.~\ref{fig:Fig4}) do modelo operacional associado, uma vez que não há como se afirmar se o respectivo arquivo está sendo utilizado ou não. Desta forma, é evidente que será necessário simular o comportamento do método $isOpen$() com o intuito de verificar de forma coerente as propriedades relacionadas com manipulação de arquivos. Como a classe \textit{QFile} indiretamente herda, a partir da classe \textit{QIODevice}, os métodos $open$() e $isOpen$(), se cria um modelo operacional para QIODevice conforme mostrado na Figura~\ref{fig:Fig5} a partir do descrito na documentação do \textit{framework} com suas representações e simulações comportamentais.
 
 \begin{figure}[htb]
 \centering
-\begin{minipage}{0.47\textwidth}
+\begin{minipage}{0.6\textwidth}
 \begin{lstlisting}
 class QIODevice {
     ...
@@ -132,14 +131,25 @@ private:
 \label{fig:Fig5}
 \end{figure}
 
-Por fim, todos os métodos que resultam em uma condição que deve ser mantida, a fim de permitir uma adequada execução de futuras instruções, devem apresentar uma simulação do seu comportamento. Consequentemente, um determinado modelo operacional deve seguir de forma rigorosa as especificações descritas na documentação oficial do \textit{framework}~\cite{Qt15} com o objetivo de se obter o mesmo comportamento, assim como, incluir mecanismos necessários à verificação do código. Como resultado, é necessário verificar o nível de equivalência entre o modelo operacional e a biblioteca original, com o intuito de se comparar o comportamento de ambos, tendo em vista que os modelos operacionais desenvolvidos são uma cópia simplificada das bibliotecas originais com todos os mecanismos necessários para a verificação do código~\cite{pereira2016}.
+A Figura~\ref{figure:figMO} demonstra como foi criado o modelo operacional para a classe \textit{QIODevice} descrito acima em QtOM a partir da documentação do \textit{framework} Qt.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=6.5in]{figuras/figMO.png}
+  \caption{Modelo operacional para os métodos $open$() e $isOpen$() na classe \textit{QIODevice}. }
+  \label{figure:figMO}
+\end{figure}
+
+Por fim, todos os métodos que resultam em uma condição que deve ser mantida, a fim de permitir uma adequada execução de futuras instruções, devem apresentar uma simulação do seu comportamento. Consequentemente, um determinado modelo operacional deve seguir de forma rigorosa as especificações descritas na documentação oficial do \textit{framework}~\cite{Qt15} com o objetivo de se obter o mesmo comportamento, assim como, incluir mecanismos necessários a verificação do código. Como resultado, é necessário verificar o nível de equivalência entre o modelo operacional e a biblioteca original, com o intuito de se comparar o comportamento de ambos, tendo em vista que os modelos operacionais desenvolvidos são uma cópia simplificada das bibliotecas originais com todos os mecanismos necessários para a verificação do código~\cite{pereira2016}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Linguagem Base}
 \label{sec:language}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Com o intuito de implementar o modelo operacional para as classes que compõe o \textit{Qt Container}, a formalização da linguagem base descrita por Ramalho \textit{et al.}~\cite{ECBS13} é utilizada e se estende até a formulação das propriedades $\mathcal{C}$ e $\mathcal{P}$. Contudo, tal linguagem foi adaptada, neste trabalho, com o objetivo de formular adequadamente a verificação de ambos tipos de \textit{containers} (\textit{i.e.}, sequencial ou associativo) como mostrado na Figura~\ref{ccl-fig}.  
+Com o intuito de implementar o modelo operacional para as classes que compõe o \textit{Qt Container}, a formalização da linguagem base descrita por Ramalho \textit{et al.}~\cite{ECBS13} é utilizada e se estende até a formulação das propriedades $\mathcal{C}$ e $\mathcal{P}$. Contudo, tal linguagem foi adaptada, neste trabalho, com o objetivo de formular adequadamente a verificação de ambos tipos de \textit{containers} (\textit{i.e.}, sequencial ou associativo) como mostrado na Figura~\ref{ccl-fig}. 
+
+De acordo com a Figura~\ref{ccl-fig}, os elementos básicos estão divididos em dois domínios sintáticos: $\mathit{V}$ para valores e $\mathit{K}$ para as chaves.   
 
 \begin{figure}[htb]
 \[\begin{array}{r@{\:\:}r@{\:\:}l}
@@ -173,14 +183,14 @@ Com o intuito de implementar o modelo operacional para as classes que compõe o \
   \label{ccl-fig}
 \end{figure}
 
-De acordo com a Figura~\ref{ccl-fig}, os elementos básicos estão divididos em dois domínios sintáticos: $\mathit{V}$ para valores e $\mathit{K}$ para as chaves. No entanto, os demais domínios, $\mathit{I}$, $\mathit{P}$, $\mathbb{N}$ e $\mathit{C}$ são mantidos por \textit{iterators}, ponteiros, índices inteiros e expressões \textit{container} adequadas, respectivamente. Assim, as variáveis $\mathit{k}$ do tipo $\mathit{K}$ e $\mathit{v}$ do tipo $\mathit{V}$ são adicionadas. Dessa forma, a notação $\mathit{I_v}$ representa um valor armazenado em um \textit{container} em uma posição direcionada pelo \textit{iterator} $\mathit{I}$ e $\mathit{I_k}$ representa uma chave armazenada em um \textit{container} em uma posição direcionada também pelo \textit{iterator} $\mathit{I}$. Tais notações são abreviações para $\mathit{store(i,I_{pos},I_v)}$ e $\mathit{store(i,I_{pos},I_k)}$, respectivamente, onde a expressão $\mathit{store}(t, f, v)$ indica \textit{container} $t$ que no campo $f$ possui um valor $v$. Da forma similar, $\mathit{P_k}$ e $\mathit{P_v}$ representam ponteiros para a chave e o valor, respectivamente.
+No entanto, os demais domínios, $\mathit{I}$, $\mathit{P}$, $\mathbb{N}$ e $\mathit{C}$ são mantidos por \textit{iterators}, ponteiros, índices inteiros e expressões \textit{container} adequadas, respectivamente. Assim, as variáveis $\mathit{k}$ do tipo $\mathit{K}$ e $\mathit{v}$ do tipo $\mathit{V}$ são adicionadas. Dessa forma, a notação $\mathit{I_v}$ representa um valor armazenado em um \textit{container} em uma posição direcionada pelo \textit{iterator} $\mathit{I}$ e $\mathit{I_k}$ representa uma chave armazenada em um \textit{container} em uma posição direcionada também pelo \textit{iterator} $\mathit{I}$. Tais notações são abreviações para $\mathit{store(i,I_{pos},I_v)}$ e $\mathit{store(i,I_{pos},I_k)}$, respectivamente, onde a expressão $\mathit{store}(t, f, v)$ indica \textit{container} $t$ que no campo $f$ possui um valor $v$. Da forma similar, $\mathit{P_k}$ e $\mathit{P_v}$ representam ponteiros para a chave e o valor, respectivamente.
 
 Além disso, três outros métodos foram incluídos com o objetivo de descrever as operações realizadas em cada \textit{container}. O método $\mathit{C.insert(k, v)}$ insere um valor $\mathit{v}$ no \textit{container} $C$ com uma chave correspondente $\mathit{k}$ e possui como retorno um \textit{iterator} que aponta para o novo elemento inserido. O método $\mathit{C.search(k)}$ retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com uma chave $\mathit{k}$ correspondente. De modo semelhante, $\mathit{C.search(v)}$ também retorna um \textit{iterator} que aponta para a primeira evidência de um elemento com um valor $\mathit{v}$ correspondente. No entanto, caso não exista nenhuma chave ou valor correspondente durante a operação com tais métodos, os mesmos retornarão $\mathit{C.end()}$, o qual corresponde ao \textit{iterator} que aponta para a posição imediatamente posterior ao último elemento. Por fim, $\mathit{C_k}$ é um endereço de memória que armazena o início das chaves dos \textit{containers}, assim como, $\mathit{C_v}$ é usado para armazenar os valores dos \textit{containers}.
 
 É importante ressaltar que, todas demais operações provenientes da linguagem base mencionada são utilizadas aqui de acordo como descrito por Ramalho \textit{et al.}~\cite{ECBS13}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textit{Containers} sequenciais}
+\section{\textit{Containers} Sequenciais}
 \label{sec:sequential}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -307,8 +317,4 @@ Nota-se que tais modelos induzem implicitamente duas propriedades principais que
 \section{Resumo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textcolor{red}{Necessário reler e reescrever essa seção}
-
-Neste capítulo, foi descrito como é realizado o processo de verificação com ESBMC$++$ junto com o modelo operacional proposto (QtOM) de acordo como mostrado na figura~\ref{figure:Fig2}, logo em seguida, é descrito como o modelo operacional proposto se utiliza de pré-condições para identificar partes das propriedades relacionadas ao \textit{framework} multiplataforma Qt, para que um determinado método ou função seja executado de forma correta. Por fim, descreve-se como QtOM usa pós-condições para garantir o mesmo comportamento de métodos ou funções, a serem analisados, em relação ao apresentado nas bibliotecas originais do \textit{framework}~\cite{Qt15}. Como resultado, o conteúdo apresentado nesse capítulo fornece todo o embasamento necessário para compreensão da verificação de programas Qt/C$++$, utilizando o ESBMC$++$ como ferramenta base e um modelo operacional que utiliza pré e pós-condições para analisar o \textit{framework} em questão.
-
-Neste capítulo, foi descrito o subconjunto denominado \textit{Qt Container} que está integrado ao módulo \textit{Qt Core} do \textit{framework} multiplataforma Qt, sendo classificado em dois subgrupos: sequenciais e associativos, dependendo da estrutura de armazenamento implementada, logo em seguida, é descrito a linguaguem base formalizada por Ramalho \textit{et al.}~\cite{ECBS13}, mas adaptada com o objetivo de formular adequadamente a verificação de ambos tipos de \textit{containers} existentes. Por fim, os \textit{containers} sequenciais e associativos foram descritos de forma detalhada, a fim de ressaltar todos os metódos que constituem essas bibliotecas assim como, a forma que estão implementados a partir de uma transformação SSA realizada. Como resultado, o conteúdo apresentado nesse capítulo fornece todo o embasamento necessário a cerca modelo operacional criado para \textit{Qt Container} usado em QtOM.
+Neste capítulo, foi descrito como é realizado o processo de verificação de ESBMC$++$ junto com o modelo operacional (QtOM) de acordo como mostrado na Figura~\ref{figure:Fig2} e como subconjunto denominado \textit{Qt Container} que está integrado ao módulo \textit{Qt Core} do \textit{framework} Qt, sendo classificado em dois subgrupos: sequenciais e associativos, dependendo da estrutura de armazenamento implementada. Logo em seguida, é descrito como QtOM se utiliza de pré-condições para identificar partes das propriedades relacionadas ao \textit{framework} multiplataforma Qt, para que um determinado método ou função seja executado de forma correta e como QtOM usa pós-condições para garantir o mesmo comportamento de métodos ou funções de acordo com o apresentado nas bibliotecas nativas do \textit{framework} Qt~\cite{Qt15}. É descrito a linguaguem base formalizada por Ramalho \textit{et al.}~\cite{ECBS13}, mas adaptada com o objetivo de formular adequadamente a verificação de ambos tipos de \textit{containers} existentes. Por fim, os \textit{containers} sequenciais e associativos foram descritos de forma detalhada, a fim de ressaltar todos os metódos que constituem essas bibliotecas assim como, a forma que estão implementados a partir de uma transformação SSA. Como resultado, o conteúdo apresentado nesse capítulo fornece todo o embasamento necessário para compreensão da verificação de programas Qt/C$++$, utilizando o ESBMC$++$ como ferramenta base e um modelo operacional que utiliza pré e pós-condições para analisar o \textit{framework} em questão, enfatizando o seu subconjunto \textit{Qt Container}.
