@@ -29,24 +29,24 @@ O objetivo geral dessa dissertação é aplicar a técnica de verificação de modelos
 Os objetivos específicos são listados a seguir:
 
 \begin{itemize}
-  \item Modularizar e extender o suporte do modelo operacional proposto que oferece estritamente o mesmo comportamento do \textit{framework} Qt com foco na verificação de suas propriedades.
+  \item Modularizar e extender o suporte do modelo operacional que oferece estritamente o mesmo comportamento do \textit{framework} Qt com foco na verificação de suas propriedades.
   \item Verificar as aplicações que utilizam o \textit{framework} Qt contidas no conjunto de \textit{benckmarks} com foco em duas propriedades base: acesso de memória e manipulação de dados.
-  \item Aplicar a metodologia de verificação proposta em aplicações reais que utilizam o \textit{framework} Qt.
+  \item Aplicar o método de verificação proposto em aplicações reais que utilizam o \textit{framework} Qt.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contribuições}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-O respectivo modelo operacional (MO) proposto, denominado QtOM, foi ampliado com o objetivo de incluir novas funcionalidades dos principais módulos do Qt, neste caso em particular, \textit{QtGui} e \textit{QtCore}. De fato, as principais contribuições aqui são:
+O respectivo modelo operacional (MO) mencionado anteriormente, denominado QtOM, foi ampliado com o objetivo de incluir novas funcionalidades dos principais módulos do Qt, neste caso em particular, \textit{QtGui} e \textit{QtCore}. De fato, as principais contribuições aqui são:
 
 \begin{itemize}
   \item Estruturar os módulos \textit{QtGui} e \textit{QtCore} de acordo com a estrutura utilizada pelo \textit{framework} Qt.
   \item Corrigir o erros existentes nos \textit{containers} baseados em templates associativos e extender o suporte de QtOM para \textit{containers} baseados em templates sequenciais.
   \item Avaliar o desempenho de três solucionadores SMT (Z3~\cite{Z308}, Yices~\cite{Dutertre:cav2014} e Boolector~\cite{Boolector09}) juntamente com a abordagem proposta utilizando o conjunto de \textit{benchmarks} (esbmc--qt) extensivamente revisado e ampliado em relação ao trabalho anterior~\cite{monteiro2015}.
   \item Integrar QtOM ao processo de verificação de programas em C++ de verificadores que se encontram no estado da arte, neste caso, DIVINE~\cite{BBH13} e LLBMC~\cite{FalkeMS13}
-  \item Fornecer suporte à verificação de duas aplicações reais que utilizam o \textit{framework} Qt denominadas Locomaps~\cite{locomaps} e Geomessage~\cite{geomessage}, respectivamente.
-  \item Avaliar o modelo operacional proposto com o intuito de analisar seu nível de conformidade em relação ao \textit{framework} Qt.
+  \item Fornecer suporte a verificação de duas aplicações reais que utilizam o \textit{framework} Qt denominadas Locomaps~\cite{locomaps} e Geomessage~\cite{geomessage}, respectivamente.
+  \item Avaliar QtOM com o intuito de analisar seu nível de conformidade em relação ao \textit{framework} Qt.
 
 \end{itemize}
 
