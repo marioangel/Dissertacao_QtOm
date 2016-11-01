@@ -8,11 +8,12 @@
 }
 
 @book{Bradley07,
- author =     {Bradley, Aaron R. and Manna, Zohar},
- title =      {The Calculus of Computation: Decision Procedures with Applications to Verification},
- publisher =  {Springer-Verlag New York, Inc.},
- year =       {2007},
- isbn =       {3540741127}
+ author      = {Bradley, Aaron R. and Manna, Zohar},
+ title       = {The Calculus of Computation: Decision Procedures with Applications to Verification},
+ publisher   = {Springer-Verlag New York, Inc.},
+ year        = {2007},
+ address     = {Secaucus, NJ, USA}, 
+ isbn        = {3540741127}
 }
 
 @book{Berard10,
@@ -40,11 +41,13 @@
 }
 
 @book{Deitel,
-  author     = {Deitel, P. and Deitel, H.},  
-  title     = {{C++ How to Program}},
-  publisher    = {Prentice Hall},  
-  year       = {2013},
-  isbn      = {978-85-7605-056-8}
+  author        = {Deitel, P. and Deitel, H.},  
+  title         = {{C++ How to Program}},
+  publisher     = {Prentice Hall},  
+  year          = {2013},
+  edition       = {7th},
+  publisher     = {Pearson Education},
+  isbn          = {978-85-7605-056-8}
 }
 
 @book{Clarke99,
@@ -65,6 +68,7 @@ journal  = {International Journal on Software Tools for Technology Transfer},
 year     = {2015},
 pages    = {1--18},
 issn     = {1433-2787},
+url      = {http://dx.doi.org/10.1007/s10009-015-0407-9},
 doi      = {10.1007/s10009-015-0407-9}
 }
 
@@ -75,8 +79,12 @@ doi      = {10.1007/s10009-015-0407-9}
                Raimundo S. Barreto},
   title     = {Model Checking Embedded {C} Software using k-Induction and Invariants},
   journal   = {V Brazilian Symposium on Computing Systems Engineering (SBESC)},
+  booktitle = {2015 Brazilian Symposium on Computing Systems Engineering (SBESC)},   
+  doi       = {10.1109/SBESC.2015.24},
+  month     = {Nov},
   year      = {2015},
   pages     = {90--95}
+  
 }
 
 @article{Morse2013,
@@ -105,6 +113,17 @@ doi         = {10.1007/s10270-013-0366-0}
 @article{Musuvathi2002,
  author = {Musuvathi, Madanlal and Park, David Y. W. and Chou, Andy and Engler, Dawson R. and Dill, David L.},
  title = {CMC: A Pragmatic Approach to Model Checking Real Code},
+ journal = {SIGOPS Oper. Syst. Rev.},
+ issue_date = {Winter 2002},
+ volume = {36},
+ number = {SI},
+ month = dec,
+ issn = {0163-5980},
+ pages = {75--88},
+ numpages = {14},
+ url = {http://doi.acm.org/10.1145/844128.844136},
+ acmid = {844136},
+ address = {New York, NY, USA},
  year = {2002},
  doi = {10.1145/844128.844136},
  publisher = {ACM}
@@ -289,18 +308,34 @@ year        = {2016}
 
 @inproceedings{MouraB09,
   author       = {Leonardo Mendon\c{c}a de Moura and Nikolaj Bj{\o}rner},
-  title        = {Satisfiability Modulo Theories: An Appetizer},
-  booktitle    = {SBMF},
+  chapter      = {Satisfiability Modulo Theories: An Appetizer},
+  title        = {Formal Methods: Foundations and Applications},
+  editor       = {Oliveira, Marcel Vin\'{\i}cius and Woodcock, Jim},
+  isbn         = {978-3-642-10451-0},
+  numpages     = {14},
+  url          = {http://dx.doi.org/10.1007/978-3-642-10452-7_3},
+  doi          = {10.1007/978-3-642-10452-7_3},
+  acmid        = {1693663},
+  publisher    = {Springer-Verlag},
+  address      = {Berlin, Heidelberg},
   pages        = {23-36},
   year         = {2009}
 }
 
 @inproceedings{CVC07,
   author       = {Clark Barrett and Cesare Tinelli},
-  title        = {{CVC}3},
-  booktitle    = {CAV},
+  title        = {{CVC3}},
+  booktitle    = {Proceedings of the $19^{th}$ International Conference on Computer Aided Verification (CAV '07)},
+  series       = {Lecture Notes in Computer Science},
+  volume       = {4590},
+  publisher    = {Springer-Verlag},
+  editor       = {Werner Damm and Holger Hermanns},
   pages        = {298--302},
+  month        = {jul},
+  note         = {Berlin, Germany},
   year         = {2007}
+  
+  
 }
 
 @inproceedings{Clarke04,
@@ -313,8 +348,16 @@ year        = {2016}
 
 @inproceedings{McCarthy62,
   author       = {J. Mccarthy},
+  editor       = {Colburn, Timothy R.
+                  and Fetzer, James H.
+                  and Rankin, Terry L.},
   title        = {Towards a Mathematical Science of Computation},
-  booktitle    = {In IFIP Congress},
+  bookTitle    = {Program Verification: Fundamental Issues in Computer Science},
+  publisher    = {Springer Netherlands},
+  address      = {Dordrecht},
+  isbn         = {978-94-011-1793-7},
+  doi          = {10.1007/978-94-011-1793-7_2},
+  url          = {http://dx.doi.org/10.1007/978-94-011-1793-7_2},
   pages        = {21--28},
   year         = {1962}
 }
@@ -387,28 +430,6 @@ year        = {2016}
 }
 
 
-@inproceedings{TACAS12,
-  author       = {Lucas C. Cordeiro and
-                  Jeremy Morse and
-                  Denis Nicole and
-                  Bernd Fischer},
-  title        = {Context-Bounded Model Checking with {ESBMC} 1.17 - (Competition Contribution)},
-  booktitle    = {{TACAS}},
-  pages        = {534--537},
-  year         = {2012}
-}
-
-@inproceedings{TACAS13,
-  author       =  {Jeremy Morse and
-                   Lucas C. Cordeiro and
-                   Denis Nicole and
-                   Bernd Fischer},
-  title        = {Handling Unbounded Loops with {ESBMC} 1.20 - (Competition Contribution)},
-  booktitle    = {{TACAS}},
-  pages        = {619--622},
-  year         = {2013}
-}
-
 @inproceedings{TACAS14,
   author       = {Jeremy Morse and
                   Mikhail Ramalho and
@@ -426,10 +447,18 @@ year        = {2016}
                   Raimundo S. Barreto and
                   Lucas C. Cordeiro and
                   Arilo Dias Neto},
-  title        = {Understanding Programming Bugs in {ANSI-C} Software Using Bounded
-                  Model Checking Counter-Examples},
-  booktitle    = {IFM},
+  title        = {Understanding Programming Bugs in {ANSI-C} Software Using Bounded Model Checking Counter-Examples},
+  booktitle    = {Proceedings of the 9th International Conference on Integrated Formal Methods},
   pages        = {128--142},
+  series       = {IFM'12},
+  isbn         = {978-3-642-30728-7},
+  location     = {Pisa, Italy},
+  numpages     = {15},
+  url          = {http://dx.doi.org/10.1007/978-3-642-30729-4_10},
+  doi          = {10.1007/978-3-642-30729-4_10},
+  acmid        = {2367846},
+  publisher    = {Springer-Verlag},
+  address      = {Berlin, Heidelberg},
   year         = {2012}
 }
 
@@ -541,6 +570,14 @@ year        = {2016}
  pages = {396--403}
               
 } 
+
+@misc{cross2014,
+ author      = {Research2guidance},
+ title       = {{Cross-Platform Tool Benchmarking}},
+ institution = {Research2guidance},
+ howpublished = "\url{{http://www.research2guidance.com/r2g/Cross-Platform-Tool-Benchmarking-Report-2014.pdf}}",
+ year        = {2014}
+}
 
 @misc{Sites74,
  author      = {Sites, Richard L.},
@@ -703,28 +740,50 @@ year        = {2016}
 }
 
 @incollection{Cordeiro2012,
-author     = "Cordeiro, Lucas
-             and Morse, Jeremy
-             and Nicole, Denis
-             and Fischer, Bernd",
-title    = "Context-Bounded Model Checking with ESBMC 1.17",
-booktitle      = "Tools and Algorithms for the Construction and Analysis of Systems",
-year       = "2012",
-publisher  = "Springer Berlin Heidelberg",
-pages      = {534--537}
+author         = {Cordeiro, Lucas
+                  and Morse, Jeremy
+                  and Nicole, Denis
+                  and Fischer, Bernd},
+title          = {Context-Bounded Model Checking with ESBMC 1.17},
+booktitle      = {Proceedings of the 18th International Conference on Tools and Algorithms for the Construction and Analysis of Systems},
+series         = {TACAS'12},
+year           = {2012},
+publisher      = {Springer-Verlag},
+isbn           = {978-3-642-28755-8},
+location       = {Tallinn, Estonia},
+numpages       = {4},
+url            = {http://dx.doi.org/10.1007/978-3-642-28756-5_42},
+doi            = {10.1007/978-3-642-28756-5_42},
+acmid          = {2260570},
+address        = {Berlin, Heidelberg},
+pages          = {534--537}
 }
 
 
 @incollection{MorseHandling2013,
-author     = {Morse, Jeremy
-             and Cordeiro, Lucas
-             and Nicole, Denis
-             and Fischer, Bernd},
-title    = {Handling Unbounded Loops with ESBMC 1.20},
-booktitle      = {Tools and Algorithms for the Construction and Analysis of Systems},
-year       = {2013},
-publisher  = {Springer Berlin Heidelberg},
-pages      = {619--622}
+author         = {Morse, Jeremy
+                  and Cordeiro, Lucas
+                  and Nicole, Denis
+                  and Fischer, Bernd},
+title          = {Handling Unbounded Loops with ESBMC 1.20},
+booktitle      = {Proceedings of the 19th International Conference on Tools and Algorithms for the Construction and Analysis of Systems},
+series         = {TACAS'13},
+isbn           = {978-3-642-36741-0},
+location       = {Rome, Italy},
+year           = {2013},
+numpages       = {4},
+url            = {http://dx.doi.org/10.1007/978-3-642-36742-7_47},
+doi            = {10.1007/978-3-642-36742-7_47},
+acmid          = {2450454},
+publisher      = {Springer-Verlag},
+address        = {Berlin, Heidelberg},
+publisher      = {Springer Berlin Heidelberg},
+pages          = {619--622}
+
+ 
+ 
+
+
 }
 
 @incollection{Morse2014,
@@ -780,11 +839,4 @@ pages      = {405--407}
   doi          = {10.1007/978-3-642-00768-2_16},
   url          = {$http://dx.doi.org/10.1007/978-3-642-00768-2_16$},
   year         = { 2009 }
-}
-
-@techreport{cross2014,
- author      = {Research2guidance},
- title       = {{Cross-Platform Tool Benchmarking}},
- institution = {Research2guidance},
- year        = {2014}
 }
