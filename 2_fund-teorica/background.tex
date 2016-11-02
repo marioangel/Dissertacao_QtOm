@@ -1,3 +1,4 @@
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Fundamentação Teórica}
 \label{chapter:background}
@@ -70,8 +71,7 @@ Além desses submódulos, o \textit{QtCore} também contêm um sistema de eventos de
 
 Desta forma, o \textit{framework} multiplataforma Qt fornece uma completa abstração para aplicações que envolvem interface gráfica com o usuário (do inglês, \textit{Graphical User Interface} - GUI) usando APIs nativas, a partir das diferentes plataformas operacionais disponíveis no mercado, para consultar as métricas e desenhar os elementos gráficos. Também são oferecidos \textit{signals} e \textit{slots} com o objetivo de realizar a comunicação entres os objetos criados~\cite{QtLibs5}. Outra característica importante a ser ressaltada deste \textit{framework} é a presença de um compilador denominado \textit{MetaObject}, o qual é responsável por interpretar os programas criados e gerar um código em C++ com meta informações~\cite{Moc}.
 
-Por fim e de acordo com o apresentado, nota-se que a complexidade e robustez de programas que utilizam o \textit{framework} multiplataforma Qt afeta diretamente os processos de verificação relacionados a eles. Em resumo, o QtOM possui uma representação de todas as classes acima referidas e suas respectivas interações a fim de suportar também todo o sistema Qt \textit{Event}.
-
+Por fim e de acordo com o apresentado, nota-se que a complexidade e robustez de programas que utilizam o \textit{framework} multiplataforma Qt afeta diretamente os processos de verificação relacionados a eles. Em resumo, Monteiro \textit{et al.}~\cite{monteiro2015} descreve um modelo operacional, denominado QtOM, que possui uma representação de todas as classes acima referidas e suas respectivas interações a fim de suportar o \textit{framework} Qt. QtOM integrado a ESBMC++ torna a ferramenta apta a verificar uma aplicação que utiliza este \textit{framework}, como mencionado na Seção~\ref{sec:trabalhosRelacionados}. Vale ressaltar que QtOM é extendido, modularizado e são corrigidos alguns erros existentes a nível de modelo operacional (\textit{i.e}, \textit{namespace} implementado em classe inapropiada e a criação de rotinas de verificação em métodos estáticos) neste trabalho.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Resumo}

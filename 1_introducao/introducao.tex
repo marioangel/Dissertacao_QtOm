@@ -1,3 +1,4 @@
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introdução}
 \label{chapter:introducao}
@@ -55,6 +56,7 @@ Por fim, de acordo com o conhecimento atual em verificação de software, não há o
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Trabalhos relacionados}
+\label{sec:trabalhosRelacionados}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 De acordo com a atual literatura sobre verificação, não existe outro verificador disponível que seja capaz de verificar as funcionalidades do \textit{framework} Qt. Ao contrário, as aplicações de eletrônica de consumo que utilizam este \textit{framework} apresentam diversas propriedades que devem ser verificadas, como estouro aritmético, segurança de ponteiros, limite de vetores e corretude no uso de \textit{containers}. A técnica BMC aplicada em verificação de software é usada em diversos verificadores~\cite{TSE12,FalkeMS13,CBMC14,WangBW14} e está se tornando cada vez mais popular, principalmente, devido ao aumento de solucionadores SMT cada vez mais sofisticados, os quais são baseados em eficientes solucionadores de satisfação Booleana (do inglês, \textit{Boolean Satisfiability} - SAT)~\cite{Z308}. Entretanto, também é conhecido que não existe homogeneidade em relação a abordagem de implementação e respectivas heurísticas em solucionadores SMT~\cite{TSE12}, sendo assim, os resultados obtidos através da verificação que se utiliza solucionadores SMT é fortemente afetado por esta limitação.
